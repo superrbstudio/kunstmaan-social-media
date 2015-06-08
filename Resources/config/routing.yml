@@ -1,0 +1,5 @@
+
+superrbsocialmediafeedbundle_social_admin_list:
+    resource: @SuperrbSocialMediaFeedBundle/Controller/SocialAdminListController.php
+    type:     annotation
+    prefix:   /admin/social/

@@ -1,0 +1,5 @@
+services:
+    SuperrbSocialMediaFeedBundle.menu.adaptor.modules:
+        class: Superrb\SocialMediaFeedBundle\Helper\Menu\ModulesMenuAdaptor
+        tags:
+            -  { name: 'kunstmaan_admin.menu.adaptor' }
