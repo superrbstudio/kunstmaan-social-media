@@ -341,6 +341,38 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     }
 
     /**
+     * Get the image for this social feed
+     *
+     * @return null|string
+     */
+    public function getImage()
+    {
+        switch($this->getType())
+        {
+            case 'instagram':
+                return $this->getInstagramImageUrl();
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the text for this social feed
+     *
+     * @return null|string
+     */
+    public function getText()
+    {
+        switch($this->getType())
+        {
+            case 'instagram':
+                return $this->getInstagramCaption();
+        }
+
+        return null;
+    }
+
+    /**
      * Set latitude
      *
      * @param string $latitude
