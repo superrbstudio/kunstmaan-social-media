@@ -3,15 +3,33 @@
 namespace Superrb\SocialMediaFeedBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Social
  *
- * @ORM\Table(name="ssmf_social")
+ * @ORM\Table(name="ssmf_social", indexes={@ORM\Index(name="social_id_type_idx", columns={"social_id", "type"}), @ORM\Index(name="type_idx", columns={"type"}), @ORM\Index(name="approved_idx", columns={"approved"}), @ORM\Index(name="approved_type_idx", columns={"approved", "type"})})
  * @ORM\Entity(repositoryClass="Superrb\SocialMediaFeedBundle\Repository\SocialRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 {
+    /**
+     * @var datetime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     */
+    private $created;
+
+    /**
+     * @var datetime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updated;
+
     /**
      * @var string
      *
@@ -29,7 +47,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="slug", type="string", length=255)
+     * @ORM\Column(name="slug", type="string", length=255, nullable=true)
      */
     private $slug;
 
@@ -41,9 +59,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     private $type;
 
     /**
-     * @var string
+     * @var datetime
      *
-     * @ORM\Column(name="date_posted", type="string", length=255)
+     * @ORM\Column(name="date_posted", type="datetime", length=255)
      */
     private $datePosted;
 
@@ -57,14 +75,14 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="latitude", type="decimal")
+     * @ORM\Column(name="latitude", type="decimal", nullable=true)
      */
     private $latitude;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="longitude", type="decimal")
+     * @ORM\Column(name="longitude", type="decimal", nullable=true)
      */
     private $longitude;
 
@@ -73,124 +91,131 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      *
      * @ORM\Column(name="approved", type="boolean")
      */
-    private $approved;
+    private $approved = false;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="blog_title", type="string", length=255)
+     * @ORM\Column(name="blog_title", type="string", length=255, nullable=true)
      */
     private $blogTitle;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="blog_content", type="string", length=999)
+     * @ORM\Column(name="blog_content", type="string", length=999, nullable=true)
      */
     private $blogContent;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="blog_image_url", type="string", length=255)
+     * @ORM\Column(name="blog_image_url", type="string", length=255, nullable=true)
      */
     private $blogImageUrl;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="instagram_image_url", type="string", length=255)
+     * @ORM\Column(name="instagram_image_url", type="string", length=255, nullable=true)
      */
     private $instagramImageUrl;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="instagram_caption", type="string", length=999)
+     * @ORM\Column(name="instagram_video_url", type="string", length=255, nullable=true)
+     */
+    private $instagramVideoUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="instagram_caption", type="string", length=999, nullable=true)
      */
     private $instagramCaption;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="twitter_content", type="string", length=255)
+     * @ORM\Column(name="twitter_content", type="string", length=255, nullable=true)
      */
     private $twitterContent;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="twitter_location", type="string", length=255)
+     * @ORM\Column(name="twitter_location", type="string", length=255, nullable=true)
      */
     private $twitterLocation;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="vimeo_title", type="string", length=255)
+     * @ORM\Column(name="vimeo_title", type="string", length=255, nullable=true)
      */
     private $vimeoTitle;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="vimeo_description", type="string", length=999)
+     * @ORM\Column(name="vimeo_description", type="string", length=999, nullable=true)
      */
     private $vimeoDescription;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="vimeo_thumbnail_image_url", type="string", length=255)
+     * @ORM\Column(name="vimeo_thumbnail_image_url", type="string", length=255, nullable=true)
      */
     private $vimeoThumbnailImageUrl;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_media_type", type="string", length=255)
+     * @ORM\Column(name="tumblr_media_type", type="string", length=255, nullable=true)
      */
     private $tumblrMediaType;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_title", type="string", length=255)
+     * @ORM\Column(name="tumblr_title", type="string", length=255, nullable=true)
      */
     private $tumblrTitle;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_body_text", type="string", length=999)
+     * @ORM\Column(name="tumblr_body_text", type="string", length=999, nullable=true)
      */
     private $tumblrBodyText;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_image_url", type="string", length=255)
+     * @ORM\Column(name="tumblr_image_url", type="string", length=255, nullable=true)
      */
     private $tumblrImageUrl;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_caption", type="string", length=999)
+     * @ORM\Column(name="tumblr_caption", type="string", length=999, nullable=true)
      */
     private $tumblrCaption;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_video_url", type="string", length=255)
+     * @ORM\Column(name="tumblr_video_url", type="string", length=255, nullable=true)
      */
     private $tumblrVideoUrl;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_video_thumbnail_image_url", type="string", length=255)
+     * @ORM\Column(name="tumblr_video_thumbnail_image_url", type="string", length=255, nullable=true)
      */
     private $tumblrVideoThumbnailImageUrl;
 
@@ -289,30 +314,6 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * Set datePosted
-     *
-     * @param string $datePosted
-     *
-     * @return Social
-     */
-    public function setDatePosted($datePosted)
-    {
-        $this->datePosted = $datePosted;
-
-        return $this;
-    }
-
-    /**
-     * Get datePosted
-     *
-     * @return string
-     */
-    public function getDatePosted()
-    {
-        return $this->datePosted;
     }
 
     /**
@@ -505,6 +506,30 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     public function getInstagramImageUrl()
     {
         return $this->instagramImageUrl;
+    }
+
+    /**
+     * Set instagramVideoUrl
+     *
+     * @param string $instagramVideoUrl
+     *
+     * @return Social
+     */
+    public function setInstagramVideoUrl($instagramVideoUrl)
+    {
+        $this->instagramVideoUrl = $instagramVideoUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get instagramVideoUrl
+     *
+     * @return string
+     */
+    public function getInstagramVideoUrl()
+    {
+        return $this->instagramVideoUrl;
     }
 
     /**
@@ -818,5 +843,76 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     {
         return $this->tumblrVideoThumbnailImageUrl;
     }
-}
 
+    /**
+     * Set created
+     *
+     * @param \DateTime $created
+     *
+     * @return Social
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created
+     *
+     * @return \DateTime
+     */
+    public function getCreated()
+    {
+        return $this->created;
+    }
+
+    /**
+     * Set updated
+     *
+     * @param \DateTime $updated
+     *
+     * @return Social
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated
+     *
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * Set datePosted
+     *
+     * @param \DateTime $datePosted
+     *
+     * @return Social
+     */
+    public function setDatePosted($datePosted)
+    {
+        $this->datePosted = $datePosted;
+
+        return $this;
+    }
+
+    /**
+     * Get datePosted
+     *
+     * @return \DateTime
+     */
+    public function getDatePosted()
+    {
+        return $this->datePosted;
+    }
+}
