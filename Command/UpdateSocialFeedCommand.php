@@ -10,8 +10,8 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Instagram\Instagram;
 use Superrb\SocialMediaFeedBundle\Entity\Social;
+use MetzWeb\Instagram\Instagram;
 
 class UpdateSocialFeedCommand extends ContainerAwareCommand
 {
@@ -25,26 +25,36 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>Starting Social Media Feed Update</info>');
-        $doctrine = $this->getContainer()->get('doctrine');
 
-        $this->updateInstagram($input, $output, $doctrine);
+        // update instagram if required
+        if($this->getContainer()->getParameter('ssmf_instagram_access_token', null))
+        {
+            $this->updateInstagram($input, $output);
+        }
     }
 
-    protected function updateInstagram(InputInterface $input, OutputInterface $output, Registry $doctrine)
+    protected function updateInstagram(InputInterface $input, OutputInterface $output)
     {
+        $doctrine = $this->getContainer()->get('doctrine');
         $output->writeln('Updating Instagram');
-        $instagram = new Instagram($this->getContainer()->getParameter('ssmf_instagram_access_token'));
+
+        $instagram = new Instagram(array(
+            'apiKey'      => $this->getContainer()->getParameter('ssmf_instagram_client_id'),
+            'apiSecret'   => $this->getContainer()->getParameter('ssmf_instagram_client_secret'),
+            'apiCallback' => $this->getContainer()->getParameter('ssmf_instagram_callback')
+        ));
+
+        $instagram->setAccessToken($this->getContainer()->getParameter('ssmf_instagram_access_token'));
 
         try
         {
             if ($this->getContainer()->getParameter('ssmf_instagram_hashtag'))
             {
-                $posts = $instagram->searchTags($this->getContainer()->getParameter('ssmf_instagram_hashtag'));
+                $posts = $instagram->getTagMedia($this->getContainer()->getParameter('ssmf_instagram_hashtag'));
             }
             else
             {
-                $user = $instagram->getUser($this->getContainer()->getParameter('ssmf_instagram_user_id'));
-                $posts = $user->getMedia();
+                $posts = $instagram->getUserMedia();
             }
 
             if($posts)
@@ -52,7 +62,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                 $added = 0;
                 $updated = 0;
 
-                foreach($posts as $post)
+                foreach($posts->data as $post)
                 {
                     $social = $doctrine->getRepository('SuperrbSocialMediaFeedBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'instagram'));
 
@@ -73,6 +83,12 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     $social->setLink($post->link);
                     $social->setInstagramCaption($post->caption->text);
                     $social->setInstagramImageUrl($post->images->standard_resolution->url);
+
+                    if(isset($post->location->latitude) and isset($post->location->longitude))
+                    {
+                        $social->setLatitude($post->location->latitude);
+                        $social->setLongitude($post->location->longitude);
+                    }
 
                     if($post->type == 'video')
                     {

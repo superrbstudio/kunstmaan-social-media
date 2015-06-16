@@ -75,14 +75,14 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="latitude", type="decimal", nullable=true)
+     * @ORM\Column(name="latitude", type="decimal", nullable=true, precision=10, scale=8)
      */
     private $latitude;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="longitude", type="decimal", nullable=true)
+     * @ORM\Column(name="longitude", type="decimal", nullable=true, precision=10, scale=8)
      */
     private $longitude;
 
