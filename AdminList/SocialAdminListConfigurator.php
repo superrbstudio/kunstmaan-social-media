@@ -36,7 +36,7 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     {
         $this->addField('username', 'Username', true);
         $this->addField('type', 'Type', true);
-        $this->addField('datePosted', 'Date posted', true);
+        $this->addField('datePosted', 'Date posted', true, 'SuperrbSocialMediaFeedBundle:AdminList:datePosted.html.twig');
         $this->addField('link', 'Link', false, 'SuperrbSocialMediaFeedBundle:AdminList:link.html.twig');
         $this->addField('approved', 'Approved', true);
         $this->addField('image', 'Image', false, 'SuperrbSocialMediaFeedBundle:AdminList:image.html.twig');
