@@ -1,6 +1,6 @@
 <?php
 
-namespace Superrb\SocialMediaFeedBundle\Repository;
+namespace Superrb\KunstmaanSocialMediaBundle\Repository;
 
 /**
  * SocialRepository

@@ -1,8 +1,8 @@
-superrbsocialmediafeedbundle_instagram_authentication:
+superrbkunstmaansocialmediabundle_instagram_authentication:
     pattern: /ssmf/instagram
-    defaults: { _controller: SuperrbSocialMediaFeedBundle:InstagramAuthentication:index }
+    defaults: { _controller: SuperrbKunstmaanSocialMediaBundle:InstagramAuthentication:index }
 
-superrbsocialmediafeedbundle_social_admin_list:
-    resource: @SuperrbSocialMediaFeedBundle/Controller/SocialAdminListController.php
+superrbkunstmaansocialmediabundle_social_admin_list:
+    resource: @SuperrbKunstmaanSocialMediaBundle/Controller/SocialAdminListController.php
     type:     annotation
     prefix:   /admin/social/

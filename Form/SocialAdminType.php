@@ -1,6 +1,6 @@
 <?php
 
-namespace Superrb\SocialMediaFeedBundle\Form;
+namespace Superrb\KunstmaanSocialMediaBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\AbstractType;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Superrb\SocialMediaFeedBundle\AdminList;
+namespace Superrb\KunstmaanSocialMediaBundle\AdminList;
 
 use Doctrine\ORM\EntityManager;
 
-use Superrb\SocialMediaFeedBundle\Form\SocialAdminType;
+use Superrb\KunstmaanSocialMediaBundle\Form\SocialAdminType;
 use Kunstmaan\AdminListBundle\AdminList\FilterType\ORM;
 use Kunstmaan\AdminListBundle\AdminList\Configurator\AbstractDoctrineORMAdminListConfigurator;
 use Kunstmaan\AdminBundle\Helper\Security\Acl\AclHelper;
@@ -17,7 +17,7 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     /**
      * @var string
      */
-    private $editTemplate = 'SuperrbSocialMediaFeedBundle:Default:edit.html.twig';
+    private $editTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:edit.html.twig';
 
     /**
      * @param EntityManager $em        The entity manager
@@ -36,10 +36,10 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     {
         $this->addField('username', 'Username', true);
         $this->addField('type', 'Type', true);
-        $this->addField('datePosted', 'Date posted', true, 'SuperrbSocialMediaFeedBundle:AdminList:datePosted.html.twig');
-        $this->addField('link', 'Link', false, 'SuperrbSocialMediaFeedBundle:AdminList:link.html.twig');
+        $this->addField('datePosted', 'Date posted', true, 'SuperrbKunstmaanSocialMediaBundle:AdminList:datePosted.html.twig');
+        $this->addField('link', 'Link', false, 'SuperrbKunstmaanSocialMediaBundle:AdminList:link.html.twig');
         $this->addField('approved', 'Approved', true);
-        $this->addField('image', 'Image', false, 'SuperrbSocialMediaFeedBundle:AdminList:image.html.twig');
+        $this->addField('image', 'Image', false, 'SuperrbKunstmaanSocialMediaBundle:AdminList:image.html.twig');
         $this->addField('text', 'Text', false);
     }
 
@@ -62,7 +62,7 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
      */
     public function getBundleName()
     {
-        return 'SuperrbSocialMediaFeedBundle';
+        return 'SuperrbKunstmaanSocialMediaBundle';
     }
 
     /**

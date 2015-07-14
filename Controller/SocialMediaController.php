@@ -1,4 +1,4 @@
-<?php namespace Superrb\SocialMediaFeedBundle\Controller;
+<?php namespace Superrb\KunstmaanSocialMediaBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -12,7 +12,7 @@ class SocialMediaController extends Controller
 
         // get the table
         $repository = $this->getDoctrine()
-            ->getRepository('SuperrbSocialMediaFeedBundle:Social');
+            ->getRepository('SuperrbKunstmaanSocialMediaBundle:Social');
 
         // get approved posts - newest first
         // limit passed or defaults to 10
@@ -23,7 +23,7 @@ class SocialMediaController extends Controller
             ->getQuery()->getResult();
 
         //render the view
-        return $this->render('SuperrbPowerfulWaterBundle:SocialMedia:feed.html.twig', array(
+        return $this->render('SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed.html.twig', array(
             'posts' => $posts,
         ));
 

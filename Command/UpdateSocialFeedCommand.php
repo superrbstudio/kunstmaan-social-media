@@ -1,6 +1,6 @@
 <?php
 
-namespace Superrb\SocialMediaFeedBundle\Command;
+namespace Superrb\KunstmaanSocialMediaBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -10,7 +10,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Superrb\SocialMediaFeedBundle\Entity\Social;
+use Superrb\KunstmaanSocialMediaBundle\Entity\Social;
 use MetzWeb\Instagram\Instagram;
 
 class UpdateSocialFeedCommand extends ContainerAwareCommand
@@ -18,7 +18,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('socialMediaFeed:update')
+            ->setName('kuma:socialMedia:update')
             ->setDescription('Updates the social media feed items');
     }
 
@@ -64,7 +64,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
                 foreach($posts->data as $post)
                 {
-                    $social = $doctrine->getRepository('SuperrbSocialMediaFeedBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'instagram'));
+                    $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'instagram'));
 
                     if(!$social)
                     {

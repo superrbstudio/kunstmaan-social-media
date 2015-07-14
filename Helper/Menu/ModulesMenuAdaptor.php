@@ -1,5 +1,5 @@
 <?php
-namespace Superrb\SocialMediaFeedBundle\Helper\Menu;
+namespace Superrb\KunstmaanSocialMediaBundle\Helper\Menu;
 
 use Kunstmaan\AdminBundle\Helper\Menu\MenuAdaptorInterface;
 use Kunstmaan\AdminBundle\Helper\Menu\MenuBuilder;
@@ -17,7 +17,7 @@ class ModulesMenuAdaptor implements MenuAdaptorInterface
     {
     if (!is_null($parent) && 'KunstmaanAdminBundle_modules' == $parent->getRoute()) {
         $menuItem = new TopMenuItem($menu);
-        $menuItem->setRoute('superrbsocialmediafeedbundle_admin_social');
+        $menuItem->setRoute('superrbkunstmaansocialmediabundle_admin_social');
         $menuItem->setInternalName('Social Media');
         $menuItem->setParent($parent);
         if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {

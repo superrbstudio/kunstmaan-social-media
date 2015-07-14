@@ -1,8 +1,8 @@
 <?php
 
-namespace Superrb\SocialMediaFeedBundle\Controller;
+namespace Superrb\KunstmaanSocialMediaBundle\Controller;
 
-use Superrb\SocialMediaFeedBundle\AdminList\SocialAdminListConfigurator;
+use Superrb\KunstmaanSocialMediaBundle\AdminList\SocialAdminListConfigurator;
 use Kunstmaan\AdminListBundle\Controller\AdminListController;
 use Kunstmaan\AdminListBundle\AdminList\Configurator\AdminListConfiguratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -35,7 +35,7 @@ class SocialAdminListController extends AdminListController
     /**
      * The index action
      *
-     * @Route("/", name="superrbsocialmediafeedbundle_admin_social")
+     * @Route("/", name="superrbkunstmaansocialmediabundle_admin_social")
      */
     public function indexAction(Request $request)
     {
@@ -45,7 +45,7 @@ class SocialAdminListController extends AdminListController
     /**
      * The add action
      *
-     * @Route("/add", name="superrbsocialmediafeedbundle_admin_social_add")
+     * @Route("/add", name="superrbkunstmaansocialmediabundle_admin_social_add")
      * @Method({"GET", "POST"})
      * @return array
      */
@@ -59,7 +59,7 @@ class SocialAdminListController extends AdminListController
      *
      * @param int $id
      *
-     * @Route("/{id}", requirements={"id" = "\d+"}, name="superrbsocialmediafeedbundle_admin_social_edit")
+     * @Route("/{id}", requirements={"id" = "\d+"}, name="superrbkunstmaansocialmediabundle_admin_social_edit")
      * @Method({"GET", "POST"})
      *
      * @return array
@@ -74,7 +74,7 @@ class SocialAdminListController extends AdminListController
      *
      * @param int $id
      *
-     * @Route("/{id}/delete", requirements={"id" = "\d+"}, name="superrbsocialmediafeedbundle_admin_social_delete")
+     * @Route("/{id}/delete", requirements={"id" = "\d+"}, name="superrbkunstmaansocialmediabundle_admin_social_delete")
      * @Method({"GET", "POST"})
      *
      * @return array
@@ -89,7 +89,7 @@ class SocialAdminListController extends AdminListController
      *
      * @param string $_format
      *
-     * @Route("/export.{_format}", requirements={"_format" = "csv|xlsx"}, name="superrbsocialmediafeedbundle_admin_social_export")
+     * @Route("/export.{_format}", requirements={"_format" = "csv|xlsx"}, name="superrbkunstmaansocialmediabundle_admin_social_export")
      * @Method({"GET", "POST"})
      * @return array
      */

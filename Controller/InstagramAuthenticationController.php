@@ -1,6 +1,6 @@
 <?php
 
-namespace Superrb\SocialMediaFeedBundle\Controller;
+namespace Superrb\KunstmaanSocialMediaBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +35,7 @@ class InstagramAuthenticationController extends Controller
             $accessToken = null;
         }
 
-        return $this->render('SuperrbSocialMediaFeedBundle:Instagram:index.html.twig', array(
+        return $this->render('SuperrbKunstmaanSocialMediaBundle:Instagram:index.html.twig', array(
             'instagram' => $instagram,
             'accessToken' => $accessToken,
         ));
