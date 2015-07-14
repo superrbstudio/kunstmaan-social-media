@@ -48,7 +48,20 @@ SuperrbKunstmaanSocialMediaBundle:
     prefix:   /
 ```
 
-### Step 4: Add required parameters
+### Step 4: Generate Database Tables
+
+You can use Doctrine Migrations or a schema update, it is your choice
+
+```bash
+app/console doctrine:migrations:diff
+app/console doctrine:migrations:migrate
+```
+or
+```bash
+app/console doctrine:schema:update --force
+```
+
+### Step 5: Add required parameters
 
 Add the following parameters to `app/config/parameters.yml`
 
