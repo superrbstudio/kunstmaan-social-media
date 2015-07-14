@@ -8,7 +8,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /**
  * Social
  *
- * @ORM\Table(name="ssmf_social", indexes={@ORM\Index(name="social_id_type_idx", columns={"social_id", "type"}), @ORM\Index(name="type_idx", columns={"type"}), @ORM\Index(name="approved_idx", columns={"approved"}), @ORM\Index(name="approved_type_idx", columns={"approved", "type"})})
+ * @ORM\Table(name="sksmb_social", indexes={@ORM\Index(name="social_id_type_idx", columns={"social_id", "type"}), @ORM\Index(name="type_idx", columns={"type"}), @ORM\Index(name="approved_idx", columns={"approved"}), @ORM\Index(name="approved_type_idx", columns={"approved", "type"})})
  * @ORM\Entity(repositoryClass="Superrb\KunstmaanSocialMediaBundle\Repository\SocialRepository")
  * @ORM\HasLifecycleCallbacks()
  */
