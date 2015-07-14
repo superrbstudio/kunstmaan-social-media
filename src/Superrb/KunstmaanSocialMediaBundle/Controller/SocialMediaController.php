@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 class SocialMediaController extends Controller
 {
     //pass the request to the action
-    public function feedAction(Request $request, $limit = 10)
+    public function feedAction(Request $request, $limit = 10, $template = 'SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed.html.twig')
     {
 
         // get the table
@@ -23,7 +23,7 @@ class SocialMediaController extends Controller
             ->getQuery()->getResult();
 
         //render the view
-        return $this->render('SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed.html.twig', array(
+        return $this->render($template, array(
             'posts' => $posts,
         ));
 
