@@ -27,7 +27,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         $output->writeln('<info>Starting Social Media Feed Update</info>');
 
         // update instagram if required
-        if($this->getContainer()->getParameter('ssmf_instagram_access_token', null))
+        if($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_access_token', null))
         {
             $this->updateInstagram($input, $output);
         }
@@ -39,18 +39,18 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         $output->writeln('Updating Instagram');
 
         $instagram = new Instagram(array(
-            'apiKey'      => $this->getContainer()->getParameter('ssmf_instagram_client_id'),
-            'apiSecret'   => $this->getContainer()->getParameter('ssmf_instagram_client_secret'),
-            'apiCallback' => $this->getContainer()->getParameter('ssmf_instagram_callback')
+            'apiKey'      => $this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_client_id'),
+            'apiSecret'   => $this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_client_secret'),
+            'apiCallback' => $this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_callback')
         ));
 
-        $instagram->setAccessToken($this->getContainer()->getParameter('ssmf_instagram_access_token'));
+        $instagram->setAccessToken($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_access_token'));
 
         try
         {
-            if ($this->getContainer()->getParameter('ssmf_instagram_hashtag'))
+            if ($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_hashtag'))
             {
-                $posts = $instagram->getTagMedia($this->getContainer()->getParameter('ssmf_instagram_hashtag'));
+                $posts = $instagram->getTagMedia($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_hashtag'));
             }
             else
             {

@@ -11,9 +11,9 @@ class InstagramAuthenticationController extends Controller
     public function indexAction(Request $request)
     {
         $instagram = new Instagram(array(
-            'apiKey'      => $this->container->getParameter('ssmf_instagram_client_id'),
-            'apiSecret'   => $this->container->getParameter('ssmf_instagram_client_secret'),
-            'apiCallback' => $this->container->getParameter('ssmf_instagram_callback')
+            'apiKey'      => $this->container->getParameter('superrb_kunstmaan_social_mediainstagram_client_id'),
+            'apiSecret'   => $this->container->getParameter('superrb_kunstmaan_social_mediainstagram_client_secret'),
+            'apiCallback' => $this->container->getParameter('superrb_kunstmaan_social_mediainstagram_callback')
         ));
 
         if($request->query->get('code'))
