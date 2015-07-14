@@ -100,3 +100,11 @@ This allows you to update your social feed and pull in the latest posts ready fo
 ```bash
 app/console kuma:socialMedia:update
 ```
+
+### Outputting Feed Items on the front end
+
+You can output a list of your authorised feed items on the front end simply be rendering a controller action. This could also be added to a page part template to allow more control.
+
+```twig
+{{ render_esi(controller('SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed', { 'limit' : 12, 'template' : 'SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed.html.twig' } )) }}
+```
