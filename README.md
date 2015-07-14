@@ -108,3 +108,7 @@ You can output a list of your authorised feed items on the front end simply be r
 ```twig
 {{ render_esi(controller('SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed', { 'limit' : 12, 'template' : 'SuperrbKunstmaanSocialMediaBundle:SocialMedia:feed.html.twig' } )) }}
 ```
+
+## Issues and Troubleshooting
+
+All issues: tech@superrb.com
