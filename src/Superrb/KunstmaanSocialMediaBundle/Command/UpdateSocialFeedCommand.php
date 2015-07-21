@@ -50,7 +50,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         {
             if ($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_hashtag'))
             {
-                $posts = $instagram->getTagMedia($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_hashtag'));
+                $posts = $instagram->getTagMedia($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_hashtag'), 50);
             }
             else
             {
