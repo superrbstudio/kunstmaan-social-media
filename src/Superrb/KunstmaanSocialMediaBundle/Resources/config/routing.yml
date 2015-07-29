@@ -1,8 +1,3 @@
 superrbkunstmaansocialmediabundle_instagram_authentication:
     pattern: /sksmb/instagram/generate-token
     defaults: { _controller: SuperrbKunstmaanSocialMediaBundle:InstagramAuthentication:index }
-
-superrbkunstmaansocialmediabundle_social_admin_list:
-    resource: @SuperrbKunstmaanSocialMediaBundle/Controller/SocialAdminListController.php
-    type:     annotation
-    prefix:   /admin/social/

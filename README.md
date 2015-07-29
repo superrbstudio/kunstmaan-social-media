@@ -46,7 +46,14 @@ Add the following to your `app/config/routes.yml`
 SuperrbKunstmaanSocialMediaBundle:
     resource: "@SuperrbKunstmaanSocialMediaBundle/Resources/config/routing.yml"
     prefix:   /
+    
+superrbkunstmaansocialmediabundle_social_admin_list:
+    resource: @SuperrbKunstmaanSocialMediaBundle/Controller/SocialAdminListController.php
+    type:     annotation
+    prefix:   /{_locale}/admin/social/
 ```
+
+Remember to remove the `/{_locale}/` from the admin list route if you are using single language.
 
 ### Step 4: Generate Database Tables
 
@@ -61,7 +68,7 @@ or
 app/console doctrine:schema:update --force
 ```
 
-### Step 5: Add required parameters
+### Step 5: Add required parameters and other config
 
 Add the following parameters to `app/config/parameters.yml`
 
@@ -75,10 +82,21 @@ parameters:
     superrb_kunstmaan_social_media.instagram_access_token:  INSTAGRAM-XXXX
     superrb_kunstmaan_social_media.instagram_user_id:       123456
     superrb_kunstmaan_social_media.instagram_username:      instagramuser
-    superrb_kunstmaan_social_media.instagram_hashtag:       '#hashtag'
+    superrb_kunstmaan_social_media.instagram_hashtag:       'hashtag'
 ```
 
 You can generate your Instagram Client details at http://developers.instagram.com
+
+Set the hashtag to null to pull the users own photos rather than posts for a hashtag.
+
+Turn on the timestampable Doctrine extension in `app/config/config.yml`
+
+```yml
+stof_doctrine_extensions:
+    orm:
+        default:
+            timestampable: true
+```
 
 ## Usage
 
