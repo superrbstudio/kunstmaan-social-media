@@ -14,12 +14,9 @@
     }
   ],
   "require": {
-    "php": ">=5.4.0",
-    "symfony/symfony": "~2.5,<2.7.0",
-    "doctrine/orm": "~2.2,>=2.2.3",
-    "doctrine/doctrine-bundle": "~1.2",
-    "gedmo/doctrine-extensions": "2.3.*",
-    "doctrine/doctrine-fixtures-bundle": "~2.2.0",
+    "kunstmaan/bundles-cms": "~3.0",
+    "guzzlehttp/guzzle" : "~6.0.2",
+    "hwi/oauth-bundle" : "~0.3.8",
     "cosenary/instagram" : "~2.3.0"
   },
   "autoload": {
