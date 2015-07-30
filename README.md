@@ -87,9 +87,19 @@ stof_doctrine_extensions:
  * Authorise the App with Instagram.
  * You will be returned to the Settings page and it should say that you are now logged in to Instagram.
  
-### Updating Your Social Feed
+### Generating a Twitter Access Token
 
-This allows you to update your social feed and pull in the latest posts ready for moderation from the project Admin List.
+ * Navigate to the Social Media module admin page.
+ * Click on the Twitter Settings in the top right corner.
+ * Enter your Twitter App Consumer ID and Consumer Secret.
+ * Choose whether to pull tweets from a given user or search for tweets using a hashtag.
+ * Enter the username or hashtag that you want to search for.
+ * Click 'Log in to Twitter'
+ * You should now see that you are logged into Twitter.
+ 
+### Updating Your Social Feed from the CLI
+
+This allows you to update your social feed and pull in the latest posts ready for moderation from the project Admin List. You could set up a cron to run this.
 
 ```bash
 app/console kuma:socialMedia:update

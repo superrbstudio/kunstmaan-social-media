@@ -32,7 +32,15 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
         if($instagramSetting->getIsActive())
         {
-            $this->updateInstagram($input, $output, $instagramSetting);
+            //$this->updateInstagram($input, $output, $instagramSetting);
+        }
+
+        // update twitter if required
+        $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
+
+        if($twitterSetting->getIsActive())
+        {
+            $this->updateTwitter($input, $output, $twitterSetting);
         }
     }
 
@@ -59,11 +67,11 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             {
                 $posts = json_decode($response->getBody()->getContents());
 
+                $added = 0;
+                $updated = 0;
+
                 if($posts)
                 {
-                    $added = 0;
-                    $updated = 0;
-
                     foreach($posts->data as $post)
                     {
                         $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'instagram'));
@@ -115,6 +123,102 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         catch (\Exception $e)
         {
             $output->writeln('<error>Unable to update Instagram: ' . $e->getMessage() . '</error>');
+        }
+    }
+
+    protected function updateTwitter(InputInterface $input, OutputInterface $output, Setting $settings)
+    {
+        $doctrine = $this->getContainer()->get('doctrine');
+        $output->writeln('Updating Twitter');
+
+        try
+        {
+            $twitter = new Client(array('base_uri' => 'https://api.twitter.com'));
+            $response = null;
+
+            if($settings->getSetting('user_or_hashtag') == 'Username' and $settings->getSetting('username'))
+            {
+                $response = $twitter->get('/1.1/statuses/user_timeline.json', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $settings->getSetting('access_token'),
+                    ),
+                    'query' => array(
+                        'count' => 50,
+                        'screen_name' => $settings->getSetting('username'),
+                    )
+                ));
+            }
+
+            if($settings->getSetting('user_or_hashtag') == 'Hashtag' and $settings->getSetting('hashtag'))
+            {
+                $response = $twitter->get('/1.1/search/tweets.json', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $settings->getSetting('access_token'),
+                    ),
+                    'query' => array(
+                        'count' => 50,
+                        'q' => '#' . $settings->getSetting('hashtag'),
+                    )
+                ));
+            }
+
+            if($response and $response->getStatusCode() == 200)
+            {
+                $posts = json_decode($response->getBody()->getContents());
+
+                $added = 0;
+                $updated = 0;
+
+                if($posts)
+                {
+                    if(isset($posts->statuses))
+                    {
+                        $posts = $posts->statuses;
+                    }
+
+                    foreach ($posts as $post)
+                    {
+                        $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'twitter'));
+
+                        if(!$social)
+                        {
+                            $social = new Social();
+                            $social->setSocialId($post->id);
+                            $social->setType('twitter');
+                            $added++;
+                        }
+                        else
+                        {
+                            $updated++;
+                        }
+
+                        $social->setUsername($post->user->screen_name);
+                        $social->setDatePosted(new \DateTime($post->created_at));
+                        $social->setLink('https://twitter.com/' . $post->user->screen_name . '/status/' . $post->id);
+                        if(isset($post->text)) { $social->setTwitterContent($post->text); }
+
+                        if(isset($post->entities->media[0]) and $post->entities->media[0]->type == 'photo')
+                        {
+                            $social->setTwitterImageUrl($post->entities->media[0]->media_url_https);
+                        }
+
+                        $doctrine->getManager()->persist($social);
+                    }
+                }
+
+                $output->writeln('Twitter Updated: ' . $added . ' Added, ' . $updated . ' Updated');
+                $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
+                $doctrine->getManager()->persist($settings);
+                $doctrine->getManager()->flush();
+            }
+            else
+            {
+                $output->writeln('<error>Unable to update Twitter: ' . $response->getStatusCode() . ' response code given</error>');
+            }
+        }
+        catch (\Exception $e)
+        {
+            $output->writeln('<error>Unable to update Twitter: ' . $e->getMessage() . '</error>');
         }
     }
 }

@@ -145,6 +145,20 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
+     * @ORM\Column(name="twitter_image_url", type="string", length=255, nullable=true)
+     */
+    private $twitterImageUrl;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="twitter_video_url", type="string", length=255, nullable=true)
+     */
+    private $twitterVideoUrl;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="twitter_location", type="string", length=255, nullable=true)
      */
     private $twitterLocation;
@@ -351,6 +365,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
         {
             case 'instagram':
                 return $this->getInstagramImageUrl();
+
+            case 'twitter':
+                return $this->getTwitterImageUrl();
         }
 
         return null;
@@ -367,6 +384,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
         {
             case 'instagram':
                 return $this->getInstagramCaption();
+
+            case 'twitter':
+                return $this->getTwitterContent();
         }
 
         return null;
@@ -946,5 +966,53 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     public function getDatePosted()
     {
         return $this->datePosted;
+    }
+
+    /**
+     * Set twitterImageUrl
+     *
+     * @param string $twitterImageUrl
+     *
+     * @return Social
+     */
+    public function setTwitterImageUrl($twitterImageUrl)
+    {
+        $this->twitterImageUrl = $twitterImageUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get twitterImageUrl
+     *
+     * @return string
+     */
+    public function getTwitterImageUrl()
+    {
+        return $this->twitterImageUrl;
+    }
+
+    /**
+     * Set twitterVideoUrl
+     *
+     * @param string $twitterVideoUrl
+     *
+     * @return Social
+     */
+    public function setTwitterVideoUrl($twitterVideoUrl)
+    {
+        $this->twitterVideoUrl = $twitterVideoUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get twitterVideoUrl
+     *
+     * @return string
+     */
+    public function getTwitterVideoUrl()
+    {
+        return $this->twitterVideoUrl;
     }
 }
