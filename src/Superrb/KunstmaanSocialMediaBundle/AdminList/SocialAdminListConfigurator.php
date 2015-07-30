@@ -15,6 +15,21 @@ use Kunstmaan\AdminBundle\Helper\Security\Acl\AclHelper;
 class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurator
 {
     /**
+     * @var Query
+     */
+    private $query = null;
+
+    /**
+     * @var PermissionDefinition
+     */
+    private $permissionDef = null;
+
+    /**
+     * @var AclHelper
+     */
+    private $aclHelper = null;
+
+    /**
      * @var string
      */
     private $listTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:list.html.twig';
@@ -124,5 +139,48 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     public function getEditTemplate()
     {
         return $this->editTemplate;
+    }
+
+    /**
+     * @return Query|null
+     */
+    public function getQuery()
+    {
+        if (is_null($this->query)) {
+            $queryBuilder = $this->getQueryBuilder();
+            $this->adaptQueryBuilder($queryBuilder);
+
+            // Apply filters
+            $filters = $this->getFilterBuilder()->getCurrentFilters();
+            /* @var Filter $filter */
+            foreach ($filters as $filter) {
+                /* @var AbstractORMFilterType $type */
+                $type = $filter->getType();
+                $type->setQueryBuilder($queryBuilder);
+                $filter->apply();
+            }
+
+            // Apply sorting
+            if (!empty($this->orderBy)) {
+                $orderBy = $this->orderBy;
+                if (!strpos($orderBy, '.')) {
+                    $orderBy = 'b.' . $orderBy;
+                }
+                $queryBuilder->orderBy($orderBy, ($this->orderDirection == 'DESC' ? 'DESC' : 'ASC'));
+            }
+            else
+            {
+                $queryBuilder->orderBy('b.datePosted', ($this->orderDirection == 'ASC' ? 'ASC' : 'DESC'));
+            }
+
+            // Apply ACL restrictions (if applicable)
+            if (!is_null($this->permissionDef) && !is_null($this->aclHelper)) {
+                $this->query = $this->aclHelper->apply($queryBuilder, $this->permissionDef);
+            } else {
+                $this->query = $queryBuilder->getQuery();
+            }
+        }
+
+        return $this->query;
     }
 }
