@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Superrb\KunstmaanSocialMediaBundle\Form\InstagramAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Entity\Setting;
 use GuzzleHttp\Client;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 /**
  * The admin list controller for Social
@@ -192,5 +195,27 @@ class SocialAdminListController extends AdminListController
             'settings' => $settings,
             'isActive' => $settings->getIsActive(),
         ));
+    }
+
+    /**
+     * Update the social feed
+     *
+     * @Route("/update-social-feed", name="superrbkunstmaansocialmediabundle_admin_social_update")
+     */
+    public function updateSocialFeedAction(Request $request)
+    {
+        $kernel = $this->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+
+        $input = new ArrayInput(array(
+            'command' => 'kuma:socialMedia:update',
+        ));
+
+        // You can use NullOutput() if you don't need the output
+        $output = new BufferedOutput();
+        $application->run($input, $output);
+
+        return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social'));
     }
 }
