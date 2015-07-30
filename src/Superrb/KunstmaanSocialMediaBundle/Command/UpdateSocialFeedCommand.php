@@ -102,8 +102,10 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                 }
 
 
-                $doctrine->getManager()->flush();
                 $output->writeln('Instagram Updated: ' . $added . ' Added, ' . $updated . ' Updated');
+                $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
+                $doctrine->getManager()->persist($settings);
+                $doctrine->getManager()->flush();
             }
             else
             {
