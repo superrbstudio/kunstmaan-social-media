@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Superrb\KunstmaanSocialMediaBundle\Form\InstagramAuthenticationType;
+use Superrb\KunstmaanSocialMediaBundle\Form\TwitterAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Entity\Setting;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -190,6 +191,106 @@ class SocialAdminListController extends AdminListController
         }
 
         return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateInstagram.html.twig', array(
+            'form' => $form->createView(),
+            'redirectUrl' => $redirectUrl,
+            'settings' => $settings,
+            'isActive' => $settings->getIsActive(),
+        ));
+    }
+
+    /**
+     * The authenticate Instagram action
+     *
+     * @Route("/authenticate-twitter", name="superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter")
+     */
+    public function authenticateTwitterAction(Request $request)
+    {
+        $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
+        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), true);
+
+        if($settings->getSetting('consumer_key') and $settings->getSetting('consumer_secret'))
+        {
+            $formData = array(
+                'consumer_key' => $settings->getSetting('consumer_key'),
+                'consumer_secret' => $settings->getSetting('consumer_secret'),
+            );
+
+            if($settings->getSetting('user_or_hashtag'))
+            {
+                $formData['user_or_hashtag'] = $settings->getSetting('user_or_hashtag');
+            }
+
+            if($settings->getSetting('username'))
+            {
+                $formData['username'] = $settings->getSetting('username');
+            }
+
+            if($settings->getSetting('hashtag'))
+            {
+                $formData['hashtag'] = $settings->getSetting('hashtag');
+            }
+
+            $form = $this->createForm(new TwitterAuthenticationType(), $formData);
+        }
+        else
+        {
+            $form = $this->createForm(new TwitterAuthenticationType());
+        }
+
+        // form has been submitted validate and redirect to twitter
+        if($request->getMethod() == 'POST')
+        {
+            $form->handleRequest($request);
+
+            if($form->isValid())
+            {
+                $settings->setSetting('consumer_key', $form['consumer_key']->getData());
+                $settings->setSetting('consumer_secret', $form['consumer_secret']->getData());
+                $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());
+                $settings->setSetting('username', $form['username']->getData());
+                $settings->setSetting('hashtag', $form['hashtag']->getData());
+                $settings->setSetting('redirect_url', $redirectUrl);
+
+                // create the bearer token credentials
+                $consumerKey = urlencode($settings->getSetting('consumer_key'));
+                $consumerSecret = urlencode($settings->getSetting('consumer_secret'));
+                $bearerTokenCredentials = base64_encode($consumerKey . ":" . $consumerSecret);
+                $settings->setSetting('bearer_token_credentials', $bearerTokenCredentials);
+
+                // attempt to get bearer token
+                try
+                {
+                    $client = new Client(array('base_uri' => 'https://api.twitter.com'));
+                    $response = $client->post(
+                        '/oauth2/token',
+                        array(
+                            'headers' => array(
+                                'Content-Type' => 'application/x-www-form-urlencoded;charset=UTF-8',
+                                'Authorization' => 'Basic ' . $settings->getSetting('bearer_token_credentials')
+                            ),
+                            'body' => 'grant_type=client_credentials',
+                        )
+                    );
+
+                    if($response->getStatusCode() == 200)
+                    {
+                        $data = json_decode($response->getBody()->getContents());
+                        $settings->setSetting('token_type', $data->token_type);
+                        $settings->setSetting('access_token', $data->access_token);
+                    }
+                }
+                catch (\Exception $e)
+                {
+                    var_dump('<error>Unable to update Twitter: ' . $e->getMessage() . '</error>');
+                }
+
+                // save everything
+                $this->getDoctrine()->getManager()->persist($settings);
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
+
+        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateTwitter.html.twig', array(
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,

@@ -33,10 +33,6 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 
     public function __construct()
     {
-        if(!$this->settings instanceof \stdClass)
-        {
-            $this->settings = new \stdClass();
-        }
     }
 
     /**
@@ -63,7 +59,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      */
     public function getSetting($key)
     {
-        if(isset($this->getSettings()[$key]))
+        if($this->getSettings() and isset($this->getSettings()[$key]))
         {
             return $this->getSettings()[$key];
         }
@@ -139,6 +135,55 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         if($response->getStatusCode() == 200)
                         {
                             $success = true;
+                        }
+                    }
+                    catch (\Exception $e)
+                    {
+                        $success = false;
+                    }
+                }
+
+            case 'twitter':
+                if($this->getSetting('access_token') and $this->getSetting('user_or_hashtag') and ($this->getSetting('username') or $this->getSetting('hashtag')))
+                {
+                    try
+                    {
+                        $client = new Client(array('base_uri' => 'https://api.twitter.com'));
+
+                        if($this->getSetting('user_or_hashtag') == 'Username' and $this->getSetting('username'))
+                        {
+                            $response = $client->get('/1.1/statuses/user_timeline.json', array(
+                                'headers' => array(
+                                    'Authorization' => 'Bearer ' . $this->getSetting('access_token'),
+                                ),
+                                'query' => array(
+                                    'count' => 50,
+                                    'screen_name' => $this->getSetting('username'),
+                                )
+                            ));
+
+                            if($response->getStatusCode() == 200)
+                            {
+                                $success = true;
+                            }
+                        }
+
+                        if($this->getSetting('user_or_hashtag') == 'Hashtag' and $this->getSetting('hashtag'))
+                        {
+                            $response = $client->get('/1.1/search/tweets.json', array(
+                                'headers' => array(
+                                    'Authorization' => 'Bearer ' . $this->getSetting('access_token'),
+                                ),
+                                'query' => array(
+                                    'count' => 50,
+                                    'q' => '#' . $this->getSetting('hashtag'),
+                                )
+                            ));
+
+                            if($response->getStatusCode() == 200)
+                            {
+                                $success = true;
+                            }
                         }
                     }
                     catch (\Exception $e)

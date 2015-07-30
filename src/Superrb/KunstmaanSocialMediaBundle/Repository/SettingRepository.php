@@ -29,4 +29,22 @@ class SettingRepository extends \Doctrine\ORM\EntityRepository
 
         return $setting;
     }
+
+    /**
+     * Get the settings for Twitter
+     */
+    public function twitter()
+    {
+        $setting = $this->findOneBySocialType('twitter');
+
+        if($setting)
+        {
+            return $setting;
+        }
+
+        $setting = new Setting();
+        $setting->setSocialType('twitter');
+
+        return $setting;
+    }
 }
