@@ -43,10 +43,6 @@ class AppKernel extends Kernel
 Add the following to your `app/config/routes.yml`
 
 ```yml
-SuperrbKunstmaanSocialMediaBundle:
-    resource: "@SuperrbKunstmaanSocialMediaBundle/Resources/config/routing.yml"
-    prefix:   /
-    
 superrbkunstmaansocialmediabundle_social_admin_list:
     resource: @SuperrbKunstmaanSocialMediaBundle/Controller/SocialAdminListController.php
     type:     annotation
@@ -68,26 +64,7 @@ or
 app/console doctrine:schema:update --force
 ```
 
-### Step 5: Add required parameters and other config
-
-Add the following parameters to `app/config/parameters.yml`
-
-Don't forget to add them to your `app/config/parameters.yml.dist` if you use it.
-
-```yml
-parameters:
-    superrb_kunstmaan_social_media.instagram_client_id:     CLIENT_ID
-    superrb_kunstmaan_social_media.instagram_client_secret: CLIENT_SECRET
-    superrb_kunstmaan_social_media.instagram_callback:      http://domain.com
-    superrb_kunstmaan_social_media.instagram_access_token:  INSTAGRAM-XXXX
-    superrb_kunstmaan_social_media.instagram_user_id:       123456
-    superrb_kunstmaan_social_media.instagram_username:      instagramuser
-    superrb_kunstmaan_social_media.instagram_hashtag:       'hashtag'
-```
-
-You can generate your Instagram Client details at http://developers.instagram.com
-
-Set the hashtag to null to pull the users own photos rather than posts for a hashtag.
+### Step 5: Add required config
 
 Turn on the timestampable Doctrine extension in `app/config/config.yml`
 
@@ -102,14 +79,13 @@ stof_doctrine_extensions:
 
 ### Generating an Instagram Access Token
 
-First make sure you have set up your Instagram client and have added the client ID and the client secret to your project parameters. Your redirect URL for your client will be http://yoursite.com/sksmb/instagram/generate-token
-
- * Navigate to http://yoursite.com/sksmb/instagram/generate-token
- * Click on the 'Login to Instagram' Link
- * Log into Instagram with the account that you want to generate the access token for
- * Authenticate the Instagram Client to allow it access to your account.
- * You will be redirected back to your site and your access token should be displayed on the page. 
- * Copy this token to your project parameters.
+ * Navigate to the Social Media module admin page.
+ * Click on the Instagram Settings in the top right corner.
+ * Enter your Instagram App client ID and client secret.
+ * Enter a hashtag to use to pull media for if required. Leave blank to pull your own feed.
+ * Click 'Log in to Instagram'
+ * Authorise the App with Instagram.
+ * You will be returned to the Settings page and it should say that you are now logged in to Instagram.
  
 ### Updating Your Social Feed
 
