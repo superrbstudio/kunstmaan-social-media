@@ -16,8 +16,7 @@
   "require": {
     "kunstmaan/bundles-cms": "~3.0",
     "guzzlehttp/guzzle" : "~6.0.2",
-    "hwi/oauth-bundle" : "~0.3.8",
-    "cosenary/instagram" : "~2.3.0"
+    "hwi/oauth-bundle" : "~0.3.8"
   },
   "autoload": {
     "psr-4": {"Superrb\\": "src/Superrb/"}

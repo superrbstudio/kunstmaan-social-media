@@ -1,0 +1,44 @@
+{% extends 'KunstmaanAdminBundle:Default:layout.html.twig' %}
+{% form_theme form 'KunstmaanAdminBundle:Form:fields.html.twig' %}
+
+{% block admin_page_title %}
+    <div class="col-sm-6 col-md-8">
+        <h1 class="app__content__header__title">
+            {% if adminmenu.current %}
+                {{ adminmenu.current.label | trans }} {% block page_header_addition %}{% endblock %}
+            {% else %}
+                {{ adminlist.configurator.getEntityName() }}
+            {% endif %}
+            > Instagram Settings
+        </h1>
+    </div>
+{% endblock %}
+
+{% block extra_actions_header %}
+    <div class="col-sm-6 col-md-4">
+        <div class="app__content__header__extra-actions">
+            <div class="btn-group">
+                <a class="btn btn-primary" href="{{ url('superrbkunstmaansocialmediabundle_admin_social') }}">Back
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram') }}" method="post" {{ form_enctype(form) }}>
+        <fieldset class="form__fieldset--padded">
+
+            {% if isActive %}
+                <p>Your account is currently active and logged in as <strong>{{ settings.getSetting('user_name') }}</strong></p>
+                <p>If you want to change the settings below you must do it as the current logged in user.</p>
+            {% else %}
+                <p>Use this page to generate an access token to allow this website access to your Instagram Account.</p>
+                <p>Your redirect URL is: <strong>{{ redirectUrl }}</strong>, you will need this to set up the Instagram App. Apps can be set up at <a href="https://instagram.com/developer/" target="_blank">https://instagram.com/developer/</a></p>
+            {% endif %}
+
+            {{ form_widget(form) }}
+            <input type="submit" value="Log in to Instagram">
+        </fieldset>
+    </form>
+{% endblock content %}

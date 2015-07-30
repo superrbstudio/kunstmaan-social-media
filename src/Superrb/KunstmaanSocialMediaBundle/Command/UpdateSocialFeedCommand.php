@@ -11,15 +11,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Superrb\KunstmaanSocialMediaBundle\Entity\Social;
-use MetzWeb\Instagram\Instagram;
+use Superrb\KunstmaanSocialMediaBundle\Entity\Setting;
 use GuzzleHttp\Client;
 
 class UpdateSocialFeedCommand extends ContainerAwareCommand
 {
-    protected $instagramAccessToken = null;
-    protected $instagramUserId = null;
-    protected $instagramHashtag = null;
-
     protected function configure()
     {
         $this
@@ -32,16 +28,15 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         $output->writeln('<info>Starting Social Media Feed Update</info>');
 
         // update instagram if required
-        if($this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_access_token', null))
+        $instagramSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
+
+        if($instagramSetting->getIsActive())
         {
-            $this->instagramAccessToken = $this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_access_token');
-            $this->instagramUserId      = $this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_user_id');
-            $this->instagramHashtag     = $this->getContainer()->getParameter('superrb_kunstmaan_social_media.instagram_hashtag');
-            $this->updateInstagram($input, $output);
+            $this->updateInstagram($input, $output, $instagramSetting);
         }
     }
 
-    protected function updateInstagram(InputInterface $input, OutputInterface $output)
+    protected function updateInstagram(InputInterface $input, OutputInterface $output, Setting $settings)
     {
         $doctrine = $this->getContainer()->get('doctrine');
         $output->writeln('Updating Instagram');
@@ -49,15 +44,15 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         try
         {
             $instagram = new Client(array('base_uri' => "https://api.instagram.com/v1/"));
-            $query = array('access_token' => $this->instagramAccessToken, 'count' => 50);
+            $query = array('access_token' => $settings->getSetting('access_token'), 'count' => 50);
 
-            if(!$this->instagramHashtag)
+            if(!$settings->getSetting('hashtag'))
             {
-                $response = $instagram->get('users/' . $this->instagramUserId . '/media/recent', array('query' => $query));
+                $response = $instagram->get('users/' . $settings->getSetting('user_id') . '/media/recent', array('query' => $query));
             }
             else
             {
-                $response = $instagram->get('tags/' . htmlentities($this->instagramHashtag) . '/media/recent', array('query' => $query));
+                $response = $instagram->get('tags/' . htmlentities($settings->getSetting('hashtag')) . '/media/recent', array('query' => $query));
             }
 
             if($response->getStatusCode() == 200)

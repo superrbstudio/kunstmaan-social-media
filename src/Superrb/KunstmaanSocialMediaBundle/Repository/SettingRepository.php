@@ -2,6 +2,8 @@
 
 namespace Superrb\KunstmaanSocialMediaBundle\Repository;
 
+use Superrb\KunstmaanSocialMediaBundle\Entity\Setting;
+
 /**
  * SettingRepository
  *
@@ -10,4 +12,21 @@ namespace Superrb\KunstmaanSocialMediaBundle\Repository;
  */
 class SettingRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Get the settings for Instagram
+     */
+    public function instagram()
+    {
+        $setting = $this->findOneBySocialType('instagram');
+
+        if($setting)
+        {
+            return $setting;
+        }
+
+        $setting = new Setting();
+        $setting->setSocialType('instagram');
+
+        return $setting;
+    }
 }

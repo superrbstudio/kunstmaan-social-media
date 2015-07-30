@@ -17,6 +17,11 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     /**
      * @var string
      */
+    private $listTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:list.html.twig';
+
+    /**
+     * @var string
+     */
     private $editTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:edit.html.twig';
 
     /**
@@ -103,6 +108,14 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     public function canDelete($item)
     {
         return false;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListTemplate()
+    {
+        return $this->listTemplate;
     }
 
     /**

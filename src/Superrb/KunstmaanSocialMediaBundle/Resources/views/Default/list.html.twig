@@ -1,0 +1,40 @@
+{% extends 'KunstmaanAdminBundle:Default:layout.html.twig' %}
+
+{% block admin_page_title %}
+    <div class="col-sm-6 col-md-8">
+        <h1 class="app__content__header__title">
+            {% if adminmenu.current %}
+                {{ adminmenu.current.label | trans }} {% block page_header_addition %}{% endblock %}
+            {% else %}
+                {{ adminlist.configurator.getEntityName() }}
+            {% endif %}
+        </h1>
+    </div>
+{% endblock %}
+
+{% block extra_actions_header %}
+    <div class="col-sm-6 col-md-4">
+        <div class="app__content__header__extra-actions">
+            <div class="btn-group">
+                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">Settings
+                    <i class="fa fa-caret-down btn__icon"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <li>
+                        <a href="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram') }}">
+                            Instagram Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+    {% if adminlist.getIndexUrl()['params'] is defined %}
+        {{ adminlist_widget(adminlist, adminlist.getIndexUrl()["path"], adminlist.getIndexUrl()['params']) }}
+    {% else %}
+        {{ adminlist_widget(adminlist, adminlist.getIndexUrl()["path"], adminlist.getIndexUrl()) }}
+    {% endif %}
+{% endblock %}
