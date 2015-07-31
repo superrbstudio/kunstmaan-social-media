@@ -32,7 +32,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
         if($instagramSetting->getIsActive())
         {
-            //$this->updateInstagram($input, $output, $instagramSetting);
+            $this->updateInstagram($input, $output, $instagramSetting);
         }
 
         // update twitter if required
