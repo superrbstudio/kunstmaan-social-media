@@ -403,7 +403,15 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                 return $this->getInstagramCaption();
 
             case 'tumblr':
-                return $this->getTumblrTitle();
+                switch($this->getTumblrMediaType())
+                {
+                    case 'text':
+                        return $this->getTumblrTitle();
+                    case 'photo':
+                        return $this->getTumblrCaption();
+                    case 'video':
+                        return $this->getTumblrCaption();
+                }
 
             case 'twitter':
                 return $this->getTwitterContent();
