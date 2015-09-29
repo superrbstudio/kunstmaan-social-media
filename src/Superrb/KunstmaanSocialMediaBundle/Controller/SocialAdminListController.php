@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Superrb\KunstmaanSocialMediaBundle\Form\InstagramAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Form\TwitterAuthenticationType;
+use Superrb\KunstmaanSocialMediaBundle\Form\TumblrAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Entity\Setting;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -196,6 +197,24 @@ class SocialAdminListController extends AdminListController
             'settings' => $settings,
             'isActive' => $settings->getIsActive(),
         ));
+    }
+
+    /**
+     * The authenticate Tumblr action
+     *
+     * @Route("/authenticate-tumblr", name="superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr")
+     */
+    public function authenticateTumblrAction(Request $request)
+    {
+        $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
+        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), true);
+        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateTumblr.html.twig', array(
+            'form' => $form->createView(),
+            'redirectUrl' => $redirectUrl,
+            'settings' => $settings,
+            'isActive' => $settings->getIsActive(),
+        ));
+
     }
 
     /**

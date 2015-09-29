@@ -31,6 +31,24 @@ class SettingRepository extends \Doctrine\ORM\EntityRepository
     }
 
     /**
+     * Get the settings for Tumblr
+     */
+    public function tumblr()
+    {
+        $setting = $this->findOneBySocialType('tumblr');
+
+        if($setting)
+        {
+            return $setting;
+        }
+
+        $setting = new Setting();
+        $setting->setSocialType('tumblr');
+
+        return $setting;
+    }
+
+    /**
      * Get the settings for Twitter
      */
     public function twitter()
