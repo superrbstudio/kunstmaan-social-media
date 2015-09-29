@@ -60,7 +60,7 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
         $this->addField('link', 'Link', false, 'SuperrbKunstmaanSocialMediaBundle:AdminList:link.html.twig');
         $this->addField('approved', 'Approved', true);
         $this->addField('image', 'Image', false, 'SuperrbKunstmaanSocialMediaBundle:AdminList:image.html.twig');
-        $this->addField('text', 'Text', false);
+        $this->addField('text', 'Text', false, 'SuperrbKunstmaanSocialMediaBundle:AdminList:text.html.twig');
     }
 
     /**
