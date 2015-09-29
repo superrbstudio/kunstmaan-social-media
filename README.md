@@ -97,7 +97,7 @@ stof_doctrine_extensions:
  * Click 'Log in to Twitter'
  * You should now see that you are logged into Twitter.
 
-### Generating a Tumblr Access Token
+### Setting Up Access To Tumblr Posts
 
   * Navigate to the Social Media module admin page.
   * Click on the Tumblr Settings in the top right corner.
