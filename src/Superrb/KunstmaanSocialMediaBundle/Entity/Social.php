@@ -201,7 +201,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_body_text", type="string", length=999, nullable=true)
+     * @ORM\Column(name="tumblr_body_text", type="text", nullable=true)
      */
     private $tumblrBodyText;
 
@@ -218,6 +218,20 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      * @ORM\Column(name="tumblr_caption", type="string", length=999, nullable=true)
      */
     private $tumblrCaption;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tumblr_video_type", type="string", length=255, nullable=true)
+     */
+    private $tumblrVideoType;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tumblr_video_embed_code", type="string", length=255, nullable=true)
+     */
+    private $tumblrVideoEmbedCode;
 
     /**
      * @var string
@@ -366,6 +380,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
             case 'instagram':
                 return $this->getInstagramImageUrl();
 
+            case 'tumblr':
+                return $this->getTumblrImageUrl();
+
             case 'twitter':
                 return $this->getTwitterImageUrl();
         }
@@ -384,6 +401,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
         {
             case 'instagram':
                 return $this->getInstagramCaption();
+
+            case 'tumblr':
+                return $this->getTumblrTitle();
 
             case 'twitter':
                 return $this->getTwitterContent();
@@ -846,6 +866,54 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     public function getTumblrCaption()
     {
         return $this->tumblrCaption;
+    }
+
+    /**
+     * Set tumblrVideoType
+     *
+     * @param string $tumblrVideoType
+     *
+     * @return Social
+     */
+    public function setTumblrVideoType($tumblrVideoType)
+    {
+        $this->tumblrVideoType = $tumblrVideoType;
+
+        return $this;
+    }
+
+    /**
+     * Get tumblrVideoType
+     *
+     * @return string
+     */
+    public function getTumblrVideoType()
+    {
+        return $this->tumblrVideoType;
+    }
+
+    /**
+     * Set tumblrVideoEmbedCode
+     *
+     * @param string $tumblrVideoEmbedCode
+     *
+     * @return Social
+     */
+    public function setTumblrVideoEmbedCode($tumblrVideoEmbedCode)
+    {
+        $this->tumblrVideoEmbedCode = $tumblrVideoEmbedCode;
+
+        return $this;
+    }
+
+    /**
+     * Get tumblrVideoEmbedCode
+     *
+     * @return string
+     */
+    public function getTumblrVideoEmbedCode()
+    {
+        return $this->tumblrVideoEmbedCode;
     }
 
     /**

@@ -35,6 +35,14 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             $this->updateInstagram($input, $output, $instagramSetting);
         }
 
+        // update tumblr if required
+        $tumblrSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
+
+        if($tumblrSetting->getIsActive())
+        {
+            $this->updateTumblr($input, $output, $tumblrSetting);
+        }
+
         // update twitter if required
         $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
 
@@ -123,6 +131,129 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         catch (\Exception $e)
         {
             $output->writeln('<error>Unable to update Instagram: ' . $e->getMessage() . '</error>');
+        }
+    }
+
+    protected function updateTumblr(InputInterface $input, OutputInterface $output, Setting $settings)
+    {
+        $doctrine = $this->getContainer()->get('doctrine');
+        $output->writeln('Updating Tumblr');
+        try
+        {
+            if($settings->getSetting('user_or_hashtag') == 'Username' && $settings->getSetting('tumblr_url'))
+            {
+                $url = 'blog/' . $settings->getSetting('tumblr_url') . '/posts';
+                $tag = '';
+            }
+            elseif($settings->getSetting('user_or_hashtag') == 'Hashtag' && $settings->getSetting('hashtag'))
+            {
+                $url = 'tagged';
+                $tag = $settings->getSetting('hashtag');
+            }
+            else
+            {
+                $url = '';
+                $tag = '';
+            }
+
+            $client = new Client(array('base_uri' => 'https://api.tumblr.com'));
+
+            if($url)
+            {
+                $response =  $client->get('/v2/' . $url, [
+                    'query' => [
+                        'api_key' => $settings->getSetting('consumer_key'),
+                        'tag' => $tag,
+                        'notes_info' => true]
+                ]);
+                if($response->getStatusCode() == 200)
+                {
+                    $data = json_decode($response->getBody()->getContents());
+                    switch ($settings->getSetting('user_or_hashtag'))
+                    {
+                        case 'Username':
+                            $posts = $data->response->posts;
+                            break;
+                        case 'Hashtag':
+                            $posts = $data->response;
+                            break;
+                    }
+                    $added = 0;
+                    $updated = 0;
+                    if($posts)
+                    {
+                        $type = 'tumblr';
+                        //will need to save additional fields for other post types
+                        $postTypes = array('text', 'photo', 'video');
+                        foreach ($posts as $post)
+                        {
+                            if(in_array($post->type, $postTypes))
+                            {
+                                $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => $type));
+
+                                if(!$social)
+                                {
+                                    $social = new Social();
+                                    $social->setSocialId($post->id);
+                                    $social->setType($type);
+                                    $added++;
+                                }
+                                else
+                                {
+                                    $updated++;
+                                }
+
+                                $social->setUsername($post->blog_name);
+                                $social->setDatePosted(new \DateTime(date('Y-m-d H:i:s', $post->timestamp)));
+                                $social->setLink($post->post_url);
+                                $social->setTumblrMediaType($post->type);
+
+                                if($post->type == 'text')
+                                {
+                                    $social->setTumblrTitle($post->title);
+                                    $social->setTumblrBodyText($post->body);
+                                }
+                                if($post->type == 'photo')
+                                {
+                                    $image = array_pop($post->photos);
+                                    $social->setTumblrImageUrl($image->original_size->url);
+                                    $social->setTumblrCaption($post->caption);
+                                }
+                                if($post->type == 'video')
+                                {
+                                    $social->setTumblrVideoType($post->video_type);
+                                    if($post->video_type == 'tumblr')
+                                    {
+                                        $social->setTumblrVideoUrl($post->video_url);
+
+                                    } else
+                                    {
+                                        $largestEmbed = array_pop($post->player);
+                                        $social->setTumblrVideoEmbedCode($largestEmbed->embed_code);
+                                    }
+                                    $social->setTumblrCaption($post->caption);
+                                    $social->setTumblrVideoThumbnailImageUrl($post->thumbnail_url);
+                                }
+
+                                $doctrine->getManager()->persist($social);
+                            }
+                        }
+                    }
+
+                    $output->writeln('Tumblr Updated: ' . $added . ' Added, ' . $updated . ' Updated');
+                    $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
+                    $doctrine->getManager()->persist($settings);
+                    $doctrine->getManager()->flush();
+                }
+                else
+                {
+                    $output->writeln('<error>Unable to update Twitter: ' . $response->getStatusCode() . ' response code given</error>');
+                }
+            }
+        }
+        catch (\Exception $e)
+        {
+            $output->writeln('<error>Unable to update Tumblr: ' . $e->getMessage() . '</error>');
         }
     }
 
