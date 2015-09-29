@@ -191,6 +191,51 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         $success = false;
                     }
                 }
+
+            case 'tumblr':
+                if($this->getSetting('consumer_key') and $this->getSetting('user_or_hashtag') and ($this->getSetting('tumblr_url') or $this->getSetting('hashtag')))
+                {
+                    try
+                    {
+                        $tag = '';
+                        $url = '';
+                        if($this->getSetting('user_or_hashtag'))
+                        {
+                            switch ($this->getSetting('user_or_hashtag'))
+                            {
+                                case 'Username':
+                                    $url = 'blog/' . $this->getSetting('tumblr_url') . '/posts';
+                                    break;
+                                case 'Hashtag':
+                                    $url = 'tagged';
+                                    $tag = $this->getSetting('hashtag');
+                                    break;
+                            }
+                        }
+
+                        $client = new Client(array('base_uri' => 'https://api.tumblr.com'));
+
+                        if($url)
+                        {
+                            $response =  $client->get('/v2/' . $url, [
+                                'query' => [
+                                    'api_key' => $this->getSetting('consumer_key'),
+                                    'tag' => $tag,
+                                    'notes_info' => true
+                                ]
+                            ]);
+
+                            if($response->getStatusCode() == 200)
+                            {
+                                $success = true;
+                            }
+                        }
+                    }
+                    catch (\Exception $e)
+                    {
+                        $success = false;
+                    }
+                }
         }
 
         return $success;
