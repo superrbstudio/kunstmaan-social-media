@@ -208,6 +208,49 @@ class SocialAdminListController extends AdminListController
     {
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), true);
+
+        if($settings->getSetting('consumer_key') && $settings->getSetting('consumer_secret'))
+        {
+            $formData = array(
+                'consumer_key' => $settings->getSetting('consumer_key'),
+                'consumer_secret' => $settings->getSetting('consumer_secret'),
+            );
+            if($settings->getSetting('user_or_hashtag'))
+            {
+                $formData['user_or_hashtag'] = $settings->getSetting('user_or_hashtag');
+            }
+            if($settings->getSetting('tumblr_url'))
+            {
+                $formData['tumblr_url'] = $settings->getSetting('tumblr_url');
+            }
+            if($settings->getSetting('hashtag'))
+            {
+                $formData['hashtag'] = $settings->getSetting('hashtag');
+            }
+            $form = $this->createForm(new TumblrAuthenticationType(), $formData);
+
+        } else
+        {
+            $form = $this->createForm(new TumblrAuthenticationType());
+        }
+
+        if($request->getMethod() == 'POST')
+        {
+            $form->handleRequest($request);
+
+            if($form->isValid())
+            {
+                $settings->setSetting('consumer_key', $form['consumer_key']->getData());
+                $settings->setSetting('consumer_secret', $form['consumer_secret']->getData());
+                $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());
+                $settings->setSetting('tumblr_url', $form['tumblr_url']->getData());
+                $settings->setSetting('hashtag', $form['hashtag']->getData());
+
+                // save everything
+                $this->getDoctrine()->getManager()->persist($settings);
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
         return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateTumblr.html.twig', array(
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
