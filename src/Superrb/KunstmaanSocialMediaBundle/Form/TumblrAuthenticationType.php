@@ -13,10 +13,6 @@ class TumblrAuthenticationType extends AbstractType
             'label' => 'Tumblr App Consumer Key',
         ));
 
-        $builder->add('consumer_secret', 'text', array(
-            'label' => 'Tumblr App Consumer Secret',
-        ));
-
         $choices = array(
             'Username' => 'Username',
             'Hashtag' => 'Hashtag',
