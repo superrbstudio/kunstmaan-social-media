@@ -28,7 +28,7 @@ class TumblrAuthenticationType extends AbstractType
 
         $builder->add('tumblr_url', 'text', array(
             'required' => false,
-            'label' => 'Tumblr URL',
+            'label' => 'Tumblr URL (found in blog settings)',
         ));
 
         $builder->add('hashtag', 'text', array(
