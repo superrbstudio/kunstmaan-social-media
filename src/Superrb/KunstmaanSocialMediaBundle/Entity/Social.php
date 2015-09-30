@@ -131,7 +131,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="instagram_caption", type="string", length=999, nullable=true)
+     * @ORM\Column(name="instagram_caption", type="text", nullable=true)
      */
     private $instagramCaption;
 
@@ -1035,7 +1035,12 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      */
     public function setDatePosted($datePosted)
     {
-        $this->datePosted = $datePosted;
+
+        $tz = new \DateTimeZone('UTC');
+        $date = new \DateTime(date('Y-m-d H:i:s', $datePosted));
+        $date->setTimezone($tz);
+
+        $this->datePosted = $date;
 
         return $this;
     }

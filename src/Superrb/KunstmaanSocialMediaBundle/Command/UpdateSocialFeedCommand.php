@@ -97,9 +97,9 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         }
 
                         $social->setUsername($post->user->username);
-                        $social->setDatePosted(new \DateTime(date('Y-m-d H:i:s', $post->created_time)));
+                        $social->setDatePosted($post->created_time);
                         $social->setLink($post->link);
-                        if(isset($post->caption->text)) { $social->setInstagramCaption($post->caption->text); }
+                        if(isset($post->caption->text)) { $social->setInstagramCaption(mysql_real_escape_string(utf8_encode($post->caption->text))); }
                         $social->setInstagramImageUrl($post->images->standard_resolution->url);
 
                         if(isset($post->location->latitude) and isset($post->location->longitude))
@@ -204,7 +204,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                                 }
 
                                 $social->setUsername($post->blog_name);
-                                $social->setDatePosted(new \DateTime(date('Y-m-d H:i:s', $post->timestamp)));
+                                $social->setDatePosted($post->timestamp);
                                 $social->setLink($post->post_url);
                                 $social->setTumblrMediaType($post->type);
 
@@ -326,7 +326,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         }
 
                         $social->setUsername($post->user->screen_name);
-                        $social->setDatePosted(new \DateTime($post->created_at));
+                        $social->setDatePosted(strtotime($post->created_at));
                         $social->setLink('https://twitter.com/' . $post->user->screen_name . '/status/' . $post->id);
                         if(isset($post->text)) { $social->setTwitterContent(mysql_real_escape_string(utf8_encode($post->text))); }
 
