@@ -381,7 +381,13 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                 return $this->getInstagramImageUrl();
 
             case 'tumblr':
-                return $this->getTumblrImageUrl();
+                switch($this->getTumblrMediaType())
+                {
+                    case 'photo':
+                        return $this->getTumblrImageUrl();
+                    case 'video':
+                        return $this->getTumblrVideoThumbnailImageUrl();
+                }
 
             case 'twitter':
                 return $this->getTwitterImageUrl();
