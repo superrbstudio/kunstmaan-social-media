@@ -76,10 +76,12 @@
                 <dt>Text:</dt>
                 <dd>
                     {{ entity.text|raw }}
-                    {% if entity.tumblrMediaType and entity.tumblrMediaType == 'text' %}
-                        {{ entity.tumblrBodyText|raw }}
-                    {% endif %}
                 </dd>
+
+                {% if entity.tumblrMediaType and entity.tumblrMediaType == 'text' %}
+                    <dt>Body Text:</dt>
+                    <dd>{{ entity.tumblrBodyText|raw }}</dd>
+                {% endif %}
 
                 <dt>Posted Date:</dt>
                 <dd>{{ entity.datePosted|date('d-m-Y H:i:s') }}</dd>
