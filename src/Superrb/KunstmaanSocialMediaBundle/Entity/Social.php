@@ -138,7 +138,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="twitter_content", type="string", length=255, nullable=true)
+     * @ORM\Column(name="twitter_content", type="text", nullable=true)
      */
     private $twitterContent;
 
