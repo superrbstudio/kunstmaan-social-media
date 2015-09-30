@@ -210,14 +210,17 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
                                 if($post->type == 'text')
                                 {
-                                    $social->setTumblrTitle($post->title);
-                                    $social->setTumblrBodyText($post->body);
+                                    $social->setTumblrTitle(mysql_real_escape_string(utf8_encode($post->title)));
+                                    $social->setTumblrBodyText(mysql_real_escape_string(utf8_encode($post->body)));
+                                }
+                                if($post->type == 'photo' || $post->type == 'video')
+                                {
+                                    $social->setTumblrCaption(mysql_real_escape_string(utf8_encode($post->caption)));
                                 }
                                 if($post->type == 'photo')
                                 {
                                     $image = array_pop($post->photos);
                                     $social->setTumblrImageUrl($image->original_size->url);
-                                    $social->setTumblrCaption($post->caption);
                                 }
                                 if($post->type == 'video')
                                 {
@@ -231,7 +234,6 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                                         $largestEmbed = array_pop($post->player);
                                         $social->setTumblrVideoEmbedCode($largestEmbed->embed_code);
                                     }
-                                    $social->setTumblrCaption($post->caption);
                                     $social->setTumblrVideoThumbnailImageUrl($post->thumbnail_url);
                                 }
 
