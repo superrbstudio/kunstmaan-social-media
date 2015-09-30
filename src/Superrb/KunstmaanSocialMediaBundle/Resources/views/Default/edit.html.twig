@@ -57,9 +57,32 @@
                 {% endif %}
             {% endblock %}
             <dl>
-                <dt>Image:</dt><dd><img src="{{ entity.image }}" /></dd>
-                <dt>Text:</dt><dd>{{ entity.text }}</dd>
-                <dt>Posted Date:</dt>{{ entity.datePosted|date('d-m-Y H:i:s') }}
+                {% if entity.tumblrMediaType %}
+                    <dt>Tumblr Media Type:</dt>
+                    <dd>{{ entity.tumblrMediaType }}</dd>
+                {% endif %}
+
+                <dt>
+                    {% if entity.tumblrMediaType and entity.tumblrMediaType == 'video' %}
+                        Video Thumbnail:
+                    {% else %}
+                        Image:
+                    {% endif %}
+                </dt>
+                <dd>
+                    <img src="{{ entity.image }}" />
+                </dd>
+
+                <dt>Text:</dt>
+                <dd>
+                    {{ entity.text|raw }}
+                    {% if entity.tumblrMediaType and entity.tumblrMediaType == 'text' %}
+                        {{ entity.tumblrBodyText|raw }}
+                    {% endif %}
+                </dd>
+
+                <dt>Posted Date:</dt>
+                <dd>{{ entity.datePosted|date('d-m-Y H:i:s') }}</dd>
             </dl>
         </fieldset>
     </form>
