@@ -215,7 +215,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_caption", type="string", length=999, nullable=true)
+     * @ORM\Column(name="tumblr_caption", type="text", nullable=true)
      */
     private $tumblrCaption;
 
