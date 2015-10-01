@@ -1,32 +1,21 @@
 {% if posts is not empty %}
     {% for post in posts %}
         <a class="post" href="{{ post.link }}" target="_blank">
-            <div class="image">
-                <img src="{{ post.image }}" alt="{{ post.text }}" />
-            </div>
-            <div class="read-more-container">
-                <div class="table">
-                    <div class="table-cell">
-                        <div class="details">
-                            <span class="icon"></span>
-                            <span class="caption">{{ post.text|length > 100 ? post.text|slice(0, 100) ~ '...' : post.text }}</span>
-                            <span class="date">
-                                {#get the difference between the now and the date posted#}
-                                {% set difference = date("now").diff(date(post.datePosted)) %}
-                                {% set leftDays = difference.days %}
-                                {# echo the difference #}
-                                {% if leftDays == 0 %}
-                                    Today
-                                {% elseif leftDays == 1 %}
-                                    1 day ago
-                                {% else %}
-                                    {{ leftDays }} days ago
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <img src="{{ post.image }}" alt="{{ post.text }}" />
+            {{ post.text|length > 100 ? post.text|slice(0, 100) ~ '...' : post.text }}
+            <span class="date">
+                {#get the difference between the now and the date posted#}
+                {% set difference = date("now").diff(date(post.datePosted)) %}
+                {% set leftDays = difference.days %}
+                {# echo the difference #}
+                {% if leftDays == 0 %}
+                    Today
+                {% elseif leftDays == 1 %}
+                    1 day ago
+                {% else %}
+                    {{ leftDays }} days ago
+                {% endif %}
+            </span>
         </a>
     {% endfor %}
 {% endif %}
