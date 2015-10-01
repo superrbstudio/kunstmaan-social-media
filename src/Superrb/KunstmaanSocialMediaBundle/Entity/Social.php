@@ -229,7 +229,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="tumblr_video_embed_code", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tumblr_video_embed_code", type="text", nullable=true)
      */
     private $tumblrVideoEmbedCode;
 
