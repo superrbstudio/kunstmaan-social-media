@@ -1035,12 +1035,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      */
     public function setDatePosted($datePosted)
     {
-
-        $tz = new \DateTimeZone('UTC');
-        $date = new \DateTime(date('Y-m-d H:i:s', $datePosted));
-        $date->setTimezone($tz);
-
-        $this->datePosted = $date;
+        $this->datePosted = $datePosted;
 
         return $this;
     }

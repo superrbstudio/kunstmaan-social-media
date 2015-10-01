@@ -97,7 +97,12 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         }
 
                         $social->setUsername($post->user->username);
-                        $social->setDatePosted($post->created_time);
+
+                        $dateTime = new \DateTime(null, new \DateTimeZone('UTC'));
+                        $dateTime->setTimestamp($post->created_time);
+                        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                        $social->setDatePosted($dateTime);
+
                         $social->setLink($post->link);
                         if(isset($post->caption->text)) { $social->setInstagramCaption(mysql_real_escape_string(utf8_encode($post->caption->text))); }
                         $social->setInstagramImageUrl($post->images->standard_resolution->url);
@@ -204,7 +209,12 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                                 }
 
                                 $social->setUsername($post->blog_name);
-                                $social->setDatePosted($post->timestamp);
+
+                                $dateTime = new \DateTime(null, new \DateTimeZone('UTC'));
+                                $dateTime->setTimestamp($post->timestamp);
+                                $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                                $social->setDatePosted($dateTime);
+
                                 $social->setLink($post->post_url);
                                 $social->setTumblrMediaType($post->type);
 
@@ -326,7 +336,11 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         }
 
                         $social->setUsername($post->user->screen_name);
-                        $social->setDatePosted(strtotime($post->created_at));
+
+                        $dateTime = new \DateTime($post->created_at, new \DateTimeZone('UTC'));
+                        $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                        $social->setDatePosted($dateTime);
+
                         $social->setLink('https://twitter.com/' . $post->user->screen_name . '/status/' . $post->id);
                         if(isset($post->text)) { $social->setTwitterContent(mysql_real_escape_string(utf8_encode($post->text))); }
 
