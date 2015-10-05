@@ -357,6 +357,20 @@ class SocialAdminListController extends AdminListController
             'isActive' => $settings->getIsActive(),
         ));
     }
+    /**
+     * The authenticate Vimeo action
+     *
+     * @Route("/authenticate-vimeo", name="superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo")
+     */
+    public function authenticateVimeoAction(Request $request)
+    {
+        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateVimeo.html.twig', array(
+//            'form' => $form->createView(),
+//            'redirectUrl' => $redirectUrl,
+//            'settings' => $settings,
+//            'isActive' => $settings->getIsActive(),
+        ));
+    }
 
     /**
      * Update the social feed
