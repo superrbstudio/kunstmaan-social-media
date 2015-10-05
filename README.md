@@ -2,7 +2,7 @@
 
 The KunstmaanSocialMediaBundle makes working with social media feeds and the KunstmaanBundles CMS easier.
 
-Currently only supports Instagram, will support Twitter, Tumblr, Facebook and YouTube.
+Currently supports Instagram, Twitter and Tumblr , will support Facebook, Vimeo and YouTube.
 
 ## Installation
 
