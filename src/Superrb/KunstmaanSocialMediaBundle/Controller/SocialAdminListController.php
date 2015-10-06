@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Superrb\KunstmaanSocialMediaBundle\Form\InstagramAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Form\TwitterAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Form\TumblrAuthenticationType;
+use Superrb\KunstmaanSocialMediaBundle\Form\VimeoAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Entity\Setting;
 use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -364,11 +365,45 @@ class SocialAdminListController extends AdminListController
      */
     public function authenticateVimeoAction(Request $request)
     {
+
+        $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
+        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo', array(), true);
+
+        if($settings->getSetting('consumer_key') and $settings->getSetting('consumer_secret'))
+        {
+            $formData = array(
+                'consumer_key' => $settings->getSetting('consumer_key'),
+                'consumer_secret' => $settings->getSetting('consumer_secret'),
+            );
+
+            if($settings->getSetting('user_or_hashtag'))
+            {
+                $formData['user_or_hashtag'] = $settings->getSetting('user_or_hashtag');
+            }
+
+            if($settings->getSetting('user_id'))
+            {
+                $formData['user_id'] = $settings->getSetting('user_id');
+            }
+
+            if($settings->getSetting('hashtag'))
+            {
+                $formData['hashtag'] = $settings->getSetting('hashtag');
+            }
+
+            $form = $this->createForm(new VimeoAuthenticationType(), $formData);
+        }
+        else
+        {
+            $form = $this->createForm(new VimeoAuthenticationType());
+        }
+
+
         return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateVimeo.html.twig', array(
-//            'form' => $form->createView(),
-//            'redirectUrl' => $redirectUrl,
-//            'settings' => $settings,
-//            'isActive' => $settings->getIsActive(),
+            'form' => $form->createView(),
+            'redirectUrl' => $redirectUrl,
+            'settings' => $settings,
+            'isActive' => $settings->getIsActive(),
         ));
     }
 
