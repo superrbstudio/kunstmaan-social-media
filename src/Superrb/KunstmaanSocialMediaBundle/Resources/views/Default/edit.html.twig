@@ -63,7 +63,7 @@
                 {% endif %}
 
                 <dt>
-                    {% if entity.tumblrMediaType and entity.tumblrMediaType == 'video' %}
+                    {% if entity.tumblrMediaType and entity.tumblrMediaType == 'video' or entity.getType == 'vimeo' %}
                         Video Thumbnail:
                     {% else %}
                         Image:
@@ -81,6 +81,11 @@
                 {% if entity.tumblrMediaType and entity.tumblrMediaType == 'text' %}
                     <dt>Body Text:</dt>
                     <dd>{{ entity.tumblrBodyText|raw }}</dd>
+                {% endif %}
+
+                {% if entity.getType == 'vimeo' %}
+                    <dt>Description:</dt>
+                    <dd>{{ entity.getVimeoDescription|raw }}</dd>
                 {% endif %}
 
                 <dt>Posted Date:</dt>
