@@ -391,6 +391,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 
             case 'twitter':
                 return $this->getTwitterImageUrl();
+
+            case 'vimeo':
+                return $this->getVimeoThumbnailImageUrl();
         }
 
         return null;
@@ -421,6 +424,9 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 
             case 'twitter':
                 return $this->getTwitterContent();
+
+            case 'vimeo':
+                return $this->getVimeoTitle();
         }
 
         return null;
