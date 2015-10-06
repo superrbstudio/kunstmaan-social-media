@@ -383,7 +383,83 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
         try
         {
+            $client = new Client(array('base_uri' => 'https://api.vimeo.com'));
 
+            if($settings->getSetting('user_or_hashtag') == 'Username' and $settings->getSetting('user_id'))
+            {
+                $response = $client->get('/users/' . $settings->getSetting('user_id') . '/videos', array(
+                    'headers' => array(
+                        'Authorization' => 'bearer ' . $settings->getSetting('access_token'),
+                    ),
+                    'query' => array(
+                        'sort' => 'date',
+                        'direction' => 'desc',
+                        'filter' => 'playable',
+                    )
+                ));
+            }
+
+            if($settings->getSetting('user_or_hashtag') == 'Hashtag' and $settings->getSetting('hashtag'))
+            {
+                $response = $client->get('/tags/' . $settings->getSetting('hashtag') . '/videos', array(
+                    'headers' => array(
+                        'Authorization' => 'bearer ' . $settings->getSetting('access_token'),
+                    ),
+                    'query' => array(
+                        'sort' => 'created_time',
+                        'direction' => 'desc',
+                    )
+                ));
+            }
+
+            if($response->getStatusCode() == 200)
+            {
+                $type = 'vimeo';
+                $posts = json_decode($response->getBody()->getContents());
+
+                $added = 0;
+                $updated = 0;
+
+                foreach($posts->data as $post)
+                {
+                    $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->uri, 'type' => $type));
+
+                    if(!$social)
+                    {
+                        $social = new Social();
+                        $social->setSocialId($post->uri);
+                        $social->setType($type);
+                        $added++;
+                    }
+                    else
+                    {
+                        $updated++;
+                    }
+
+                    $thumbnail = array_pop($post->pictures->sizes);
+
+                    $social->setUsername($post->user->name);
+                    $dateTime = new \DateTime($post->created_time, new \DateTimeZone('UTC'));
+                    $dateTime->setTimezone(new \DateTimeZone(date_default_timezone_get()));
+                    $social->setDatePosted($dateTime);
+
+                    $social->setLink($post->link);
+                    $social->setVimeoTitle(mysql_real_escape_string(utf8_encode($post->name)));
+                    $social->setVimeoDescription($post->description);
+                    $social->setVimeoThumbnailImageUrl($thumbnail->link);
+
+                    $doctrine->getManager()->persist($social);
+                }
+            }
+            else
+            {
+                $output->writeln('<error>Unable to update Vimeo: ' . $response->getStatusCode() . ' response code given</error>');
+            }
+
+            $output->writeln('Vimeo Updated: ' . $added . ' Added, ' . $updated . ' Updated');
+            $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
+            $doctrine->getManager()->persist($settings);
+            $doctrine->getManager()->flush();
         }
         catch (\Exception $e)
         {
