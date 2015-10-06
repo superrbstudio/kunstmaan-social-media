@@ -65,4 +65,22 @@ class SettingRepository extends \Doctrine\ORM\EntityRepository
 
         return $setting;
     }
+
+    /**
+     * Get the settings for Vimeo
+     */
+    public function vimeo()
+    {
+        $setting = $this->findOneBySocialType('vimeo');
+
+        if($setting)
+        {
+            return $setting;
+        }
+
+        $setting = new Setting();
+        $setting->setSocialType('vimeo');
+
+        return $setting;
+    }
 }
