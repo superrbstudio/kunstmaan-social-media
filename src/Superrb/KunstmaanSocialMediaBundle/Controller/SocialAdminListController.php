@@ -365,7 +365,6 @@ class SocialAdminListController extends AdminListController
      */
     public function authenticateVimeoAction(Request $request)
     {
-
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo', array(), true);
 
@@ -398,6 +397,79 @@ class SocialAdminListController extends AdminListController
             $form = $this->createForm(new VimeoAuthenticationType());
         }
 
+        if($request->query->get('code', null) and $request->query->get('state') == $settings->getSetting('consumer_secret'))
+        {
+            // create the bearer token credentials
+            $bearerTokenCredentials = base64_encode($settings->getSetting('consumer_key') . ":" . $settings->getSetting('consumer_secret'));
+            $settings->setSetting('bearer_token_credentials', $bearerTokenCredentials);
+            $settings->setSetting('code', $request->query->get('code'));
+
+            try
+            {
+                $client = new Client(array('base_uri' => 'https://api.vimeo.com'));
+                $response = $client->post(
+                    '/oauth/access_token',
+                    array(
+                        'headers' => array(
+                            'Authorization' => 'basic ' . $settings->getSetting('bearer_token_credentials')
+                        ),
+                        'form_params' => [
+                            'grant_type' => 'authorization_code',
+                            'code' => $settings->getSetting('code'),
+                            'redirect_uri' => $settings->getSetting('redirect_url')
+                        ]
+                    )
+                );
+                if($response->getStatusCode() == 200)
+                {
+                    $details = json_decode($response->getBody()->getContents());
+
+                    $settings->setSetting('access_token', $details->access_token);
+                    $settings->setSetting('token_type', $details->token_type);
+                    $settings->setSetting('scope', $details->scope);
+                    $settings->setSetting('user_name', $details->user->name);
+                    $settings->setSetting('user_link', $details->user->link);
+                }
+            }
+            catch (\Exception $e)
+            {
+                var_dump('<error>Unable to update Vimeo: ' . $e->getMessage() . '</error>');
+            }
+
+        }
+        // form has been submitted validate and redirect to vimeo
+        if($request->getMethod() == 'POST')
+        {
+            $form->handleRequest($request);
+
+            if($form->isValid())
+            {
+                $settings->setSetting('consumer_key', $form['consumer_key']->getData());
+                $settings->setSetting('consumer_secret', $form['consumer_secret']->getData());
+                $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());
+                $settings->setSetting('user_id', $form['user_id']->getData());
+                $settings->setSetting('hashtag', $form['hashtag']->getData());
+                $settings->setSetting('redirect_url', $redirectUrl);
+
+                $this->getDoctrine()->getManager()->persist($settings);
+                $this->getDoctrine()->getManager()->flush();
+
+                $queryParams = array(
+                    'response_type' => 'code',
+                    'client_id' => $settings->getSetting('consumer_key'),
+                    'redirect_uri' => $settings->getSetting('redirect_url'),
+                    'state' => $settings->getSetting('consumer_secret')
+                );
+
+                $queryParams = http_build_query($queryParams);
+
+                return $this->redirect('https://api.vimeo.com/oauth/authorize/?' . $queryParams);
+            }
+        }
+
+        // save everything
+        $this->getDoctrine()->getManager()->persist($settings);
+        $this->getDoctrine()->getManager()->flush();
 
         return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateVimeo.html.twig', array(
             'form' => $form->createView(),
