@@ -33,6 +33,7 @@
                 <p>Your account is currently <strong>active</strong> and <strong>logged in</strong>.</p>
             {% else %}
                 <p>Use this page to generate an access token to allow this website access to Vimeo.</p>
+                <p>Your redirect URL is: <strong>{{ redirectUrl }}</strong>, you will need this to set up the Vimeo App. Apps can be set up at <a href="https://developer.vimeo.com/apps" target="_blank">https://developer.vimeo.com/apps</a></p>
             {% endif %}
 
             {{ form_widget(form) }}
