@@ -2,7 +2,7 @@
 
 The KunstmaanSocialMediaBundle makes working with social media feeds and the KunstmaanBundles CMS easier.
 
-Currently supports Instagram, Twitter and Tumblr , will support Facebook, Vimeo and YouTube.
+Currently supports Instagram, Tumblr, Twitter and Vimeo , will support Facebook and YouTube.
 
 ## Installation
 
@@ -96,7 +96,7 @@ stof_doctrine_extensions:
   * Enter the Tumblr URL or hashtag that you want to search for. - The Tumblr URL should contain 'tumblr.com' unless it is a custom URL
   * Click 'Log in to Tumblr'
   * You should now see that you are logged into Tumblr.
-  
+
 ### Generating a Twitter Access Token
 
  * Navigate to the Social Media module admin page.
@@ -106,6 +106,16 @@ stof_doctrine_extensions:
  * Enter the username or hashtag that you want to search for.
  * Click 'Log in to Twitter'
  * You should now see that you are logged into Twitter.
+
+### Generating a Vimeo Access Token
+
+ * Navigate to the Social Media module admin page.
+ * Click on the Vimeo Settings in the top right corner.
+ * Enter your Vimeo App Consumer ID and Consumer Secret.
+ * Choose whether to pull videos from a given user or search for videos using a hashtag.
+ * Enter the user ID or hashtag that you want to search for.
+ * Click 'Log in to Vimeo'
+ * You should now see that you are logged into Vimeo.
  
 ### Updating Your Social Feed from the CLI
 
