@@ -146,6 +146,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         $success = false;
                     }
                 }
+            break;
 
             case 'tumblr':
                 if($this->getSetting('consumer_key') and $this->getSetting('user_or_hashtag') and ($this->getSetting('tumblr_url') or $this->getSetting('hashtag')))
@@ -191,6 +192,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         $success = false;
                     }
                 }
+            break;
 
             case 'twitter':
                 if($this->getSetting('access_token') and $this->getSetting('user_or_hashtag') and ($this->getSetting('username') or $this->getSetting('hashtag')))
@@ -240,6 +242,8 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         $success = false;
                     }
                 }
+            break;
+
             case 'vimeo':
                 if($this->getSetting('access_token') and $this->getSetting('user_or_hashtag') and ($this->getSetting('user_id') or $this->getSetting('hashtag')))
                 {
@@ -281,6 +285,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         $success = false;
                     }
                 }
+            break;
 
         }
 
