@@ -50,6 +50,14 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         {
             $this->updateTwitter($input, $output, $twitterSetting);
         }
+
+        // update vimeo if required
+        $vimeoSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
+
+        if($vimeoSetting->getIsActive())
+        {
+            $this->updateVimeo($input, $output, $vimeoSetting);
+        }
     }
 
     protected function updateInstagram(InputInterface $input, OutputInterface $output, Setting $settings)
@@ -366,6 +374,20 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         catch (\Exception $e)
         {
             $output->writeln('<error>Unable to update Twitter: ' . $e->getMessage() . '</error>');
+        }
+    }
+    protected function updateVimeo(InputInterface $input, OutputInterface $output, Setting $settings)
+    {
+        $doctrine = $this->getContainer()->get('doctrine');
+        $output->writeln('Updating Vimeo');
+
+        try
+        {
+
+        }
+        catch (\Exception $e)
+        {
+            $output->writeln('<error>Unable to update Vimeo: ' . $e->getMessage() . '</error>');
         }
     }
 }
