@@ -86,16 +86,6 @@ stof_doctrine_extensions:
  * Click 'Log in to Instagram'
  * Authorise the App with Instagram.
  * You will be returned to the Settings page and it should say that you are now logged in to Instagram.
- 
-### Generating a Twitter Access Token
-
- * Navigate to the Social Media module admin page.
- * Click on the Twitter Settings in the top right corner.
- * Enter your Twitter App Consumer ID and Consumer Secret.
- * Choose whether to pull tweets from a given user or search for tweets using a hashtag.
- * Enter the username or hashtag that you want to search for.
- * Click 'Log in to Twitter'
- * You should now see that you are logged into Twitter.
 
 ### Setting Up Access To Tumblr Posts
 
@@ -106,6 +96,16 @@ stof_doctrine_extensions:
   * Enter the Tumblr URL or hashtag that you want to search for. - The Tumblr URL should contain 'tumblr.com' unless it is a custom URL
   * Click 'Log in to Tumblr'
   * You should now see that you are logged into Tumblr.
+  
+### Generating a Twitter Access Token
+
+ * Navigate to the Social Media module admin page.
+ * Click on the Twitter Settings in the top right corner.
+ * Enter your Twitter App Consumer ID and Consumer Secret.
+ * Choose whether to pull tweets from a given user or search for tweets using a hashtag.
+ * Enter the username or hashtag that you want to search for.
+ * Click 'Log in to Twitter'
+ * You should now see that you are logged into Twitter.
  
 ### Updating Your Social Feed from the CLI
 
