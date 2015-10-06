@@ -240,6 +240,48 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                         $success = false;
                     }
                 }
+            case 'vimeo':
+                if($this->getSetting('access_token') and $this->getSetting('user_or_hashtag') and ($this->getSetting('user_id') or $this->getSetting('hashtag')))
+                {
+                    try
+                    {
+                        $client = new Client(array('base_uri' => 'https://api.vimeo.com'));
+
+                        if($this->getSetting('user_or_hashtag') == 'Username' and $this->getSetting('user_id'))
+                        {
+
+                            $response = $client->get('/users/' . $this->getSetting('user_id') . '/videos', array(
+                                'headers' => array(
+                                    'Authorization' => 'bearer ' . $this->getSetting('access_token'),
+                                )
+                            ));
+
+                            if($response->getStatusCode() == 200)
+                            {
+                                $success = true;
+                            }
+                        }
+
+                        if($this->getSetting('user_or_hashtag') == 'Hashtag' and $this->getSetting('hashtag'))
+                        {
+                            $response = $client->get('/tags/' . $this->getSetting('hashtag') . '/videos', array(
+                                'headers' => array(
+                                    'Authorization' => 'bearer ' . $this->getSetting('access_token'),
+                                )
+                            ));
+
+                            if($response->getStatusCode() == 200)
+                            {
+                                $success = true;
+                            }
+                        }
+                    }
+                    catch (\Exception $e)
+                    {
+                        $success = false;
+                    }
+                }
+
         }
 
         return $success;
