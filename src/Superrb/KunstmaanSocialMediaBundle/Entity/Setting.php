@@ -118,7 +118,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @return bool
      */
-    public function getIsActive()
+    public function getIsAuthenticated()
     {
         $success = false;
 

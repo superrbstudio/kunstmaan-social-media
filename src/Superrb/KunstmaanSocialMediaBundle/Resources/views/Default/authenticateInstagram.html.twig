@@ -29,7 +29,7 @@
     <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram') }}" method="post" {{ form_enctype(form) }}>
         <fieldset class="form__fieldset--padded">
 
-            {% if isActive %}
+            {% if isAuthenticated %}
                 <p>Your account is currently active and logged in as <strong>{{ settings.getSetting('user_name') }}</strong></p>
                 <p>If you want to change the settings below you must do it as the current logged in user.</p>
             {% else %}
@@ -38,7 +38,7 @@
             {% endif %}
 
             {{ form_widget(form) }}
-            <input type="submit" value="{% if isActive %}Update Instagram Details{% else %}Log in to Instagram{% endif %}">
+            <input type="submit" value="{% if isAuthenticated %}Update Instagram Details{% else %}Log in to Instagram{% endif %}">
         </fieldset>
     </form>
 {% endblock content %}

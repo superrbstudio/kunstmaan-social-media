@@ -29,7 +29,7 @@
     <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter') }}" method="post" {{ form_enctype(form) }}>
         <fieldset class="form__fieldset--padded">
 
-            {% if isActive %}
+            {% if isAuthenticated %}
                 <p>Your account is currently <strong>active</strong> and <strong>logged in</strong>.</p>
             {% else %}
                 <p>Use this page to generate an access token to allow this website access to Twitter.</p>
@@ -37,7 +37,7 @@
             {% endif %}
 
             {{ form_widget(form) }}
-            <input type="submit" value="{% if isActive %}Update Twitter Details{% else %}Log in to Twitter{% endif %}">
+            <input type="submit" value="{% if isAuthenticated %}Update Twitter Details{% else %}Log in to Twitter{% endif %}">
         </fieldset>
     </form>
 {% endblock content %}

@@ -30,7 +30,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update instagram if required
         $instagramSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
 
-        if($instagramSetting->getIsActive())
+        if($instagramSetting->getIsAuthenticated())
         {
             $this->updateInstagram($input, $output, $instagramSetting);
         }
@@ -38,7 +38,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update tumblr if required
         $tumblrSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
 
-        if($tumblrSetting->getIsActive())
+        if($tumblrSetting->getIsAuthenticated())
         {
             $this->updateTumblr($input, $output, $tumblrSetting);
         }
@@ -46,7 +46,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update twitter if required
         $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
 
-        if($twitterSetting->getIsActive())
+        if($twitterSetting->getIsAuthenticated())
         {
             $this->updateTwitter($input, $output, $twitterSetting);
         }
@@ -54,7 +54,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update vimeo if required
         $vimeoSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
 
-        if($vimeoSetting->getIsActive())
+        if($vimeoSetting->getIsAuthenticated())
         {
             $this->updateVimeo($input, $output, $vimeoSetting);
         }

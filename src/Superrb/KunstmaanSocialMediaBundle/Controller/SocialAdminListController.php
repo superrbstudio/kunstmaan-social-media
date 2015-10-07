@@ -196,7 +196,7 @@ class SocialAdminListController extends AdminListController
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
-            'isActive' => $settings->getIsActive(),
+            'isAuthenticated' => $settings->getIsAuthenticated(),
         ));
     }
 
@@ -254,7 +254,7 @@ class SocialAdminListController extends AdminListController
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
-            'isActive' => $settings->getIsActive(),
+            'isAuthenticated' => $settings->getIsAuthenticated(),
         ));
 
     }
@@ -355,7 +355,7 @@ class SocialAdminListController extends AdminListController
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
-            'isActive' => $settings->getIsActive(),
+            'isAuthenticated' => $settings->getIsAuthenticated(),
         ));
     }
     /**
@@ -475,7 +475,7 @@ class SocialAdminListController extends AdminListController
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
-            'isActive' => $settings->getIsActive(),
+            'isAuthenticated' => $settings->getIsAuthenticated(),
         ));
     }
 
