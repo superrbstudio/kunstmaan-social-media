@@ -268,7 +268,7 @@ class SocialAdminListController extends AdminListController
     }
 
     /**
-     * The authenticate Instagram action
+     * The authenticate Twitter action
      *
      * @Route("/authenticate-twitter", name="superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter")
      */
