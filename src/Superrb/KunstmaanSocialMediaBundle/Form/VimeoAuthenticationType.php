@@ -10,7 +10,7 @@ class VimeoAuthenticationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('consumer_key', 'text', array(
-            'label' => 'Vimeo App Consumer Key (Client Identifier)',
+            'label' => 'Vimeo App Client Identifier',
         ));
 
         $builder->add('consumer_secret', 'text', array(
