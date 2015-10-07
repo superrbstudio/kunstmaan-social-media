@@ -9,6 +9,15 @@ class TwitterAuthenticationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $activeChoices = array(
+            'active' => 'Active',
+            'disabled' => 'Disabled',
+        );
+
+        $builder->add('active', 'choice', array(
+            'choices' => $activeChoices,
+        ));
+
         $builder->add('consumer_key', 'text', array(
             'label' => 'Twitter App Consumer Key',
         ));

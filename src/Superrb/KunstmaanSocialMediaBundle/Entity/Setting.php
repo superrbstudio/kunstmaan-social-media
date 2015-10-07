@@ -291,4 +291,41 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 
         return $success;
     }
+    /**
+     * @return bool
+     */
+    public function getIsActive()
+    {
+        $success = false;
+
+        switch($this->getSocialType())
+        {
+            case 'instagram':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+            case 'tumblr':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+            case 'twitter':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+            case 'vimeo':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+        }
+
+        return $success;
+    }
 }

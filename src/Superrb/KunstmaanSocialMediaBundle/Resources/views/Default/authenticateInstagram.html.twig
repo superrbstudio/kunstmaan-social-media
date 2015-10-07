@@ -30,7 +30,7 @@
         <fieldset class="form__fieldset--padded">
 
             {% if isAuthenticated %}
-                <p>Your account is currently active and logged in as <strong>{{ settings.getSetting('user_name') }}</strong></p>
+                <p>Your account is currently <strong>authenticated</strong> and <strong>logged in</strong> as <strong>{{ settings.getSetting('user_name') }}</strong></p>
                 <p>If you want to change the settings below you must do it as the current logged in user.</p>
             {% else %}
                 <p>Use this page to generate an access token to allow this website access to your Instagram Account.</p>

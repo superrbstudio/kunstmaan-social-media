@@ -9,6 +9,15 @@ class InstagramAuthenticationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $activeChoices = array(
+            'active' => 'Active',
+            'disabled' => 'Disabled',
+        );
+
+        $builder->add('active', 'choice', array(
+            'choices' => $activeChoices,
+        ));
+
         $builder->add('client_id', 'text', array(
             'label' => 'Instagram App Client ID',
         ));

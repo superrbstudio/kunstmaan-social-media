@@ -30,33 +30,58 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update instagram if required
         $instagramSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
 
-        if($instagramSetting->getIsAuthenticated())
+        if($instagramSetting->getIsActive())
         {
-            $this->updateInstagram($input, $output, $instagramSetting);
+            if($instagramSetting->getIsAuthenticated())
+            {
+                $this->updateInstagram($input, $output, $instagramSetting);
+            }
+        } else
+        {
+            $output->writeln('Instagram Disabled');
         }
 
         // update tumblr if required
         $tumblrSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
 
-        if($tumblrSetting->getIsAuthenticated())
+        if($tumblrSetting->getIsActive())
         {
-            $this->updateTumblr($input, $output, $tumblrSetting);
+            if($tumblrSetting->getIsAuthenticated())
+            {
+                $this->updateTumblr($input, $output, $tumblrSetting);
+            }
+        } else
+        {
+            $output->writeln('Tumblr Disabled');
         }
 
         // update twitter if required
         $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
 
-        if($twitterSetting->getIsAuthenticated())
+        if($twitterSetting->getIsActive())
         {
-            $this->updateTwitter($input, $output, $twitterSetting);
+            if($twitterSetting->getIsAuthenticated())
+            {
+                $this->updateTwitter($input, $output, $twitterSetting);
+            }
+        } else
+        {
+            $output->writeln('Twitter Disabled');
         }
+
 
         // update vimeo if required
         $vimeoSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
 
-        if($vimeoSetting->getIsAuthenticated())
+        if($vimeoSetting->getIsActive())
         {
-            $this->updateVimeo($input, $output, $vimeoSetting);
+            if($vimeoSetting->getIsAuthenticated())
+            {
+                $this->updateVimeo($input, $output, $vimeoSetting);
+            }
+        } else
+        {
+            $output->writeln('Vimeo Disabled');
         }
     }
 

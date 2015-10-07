@@ -117,12 +117,14 @@ class SocialAdminListController extends AdminListController
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), true);
 
+        $formData = array(
+            'active' => $settings->getSetting('active')
+        );
+
         if($settings->getSetting('client_id') and $settings->getSetting('client_secret'))
         {
-            $formData = array(
-                'client_id' => $settings->getSetting('client_id'),
-                'client_secret' => $settings->getSetting('client_secret'),
-            );
+            $formData['client_id'] = $settings->getSetting('client_id');
+            $formData['client_secret'] = $settings->getSetting('client_secret');
 
             if($settings->getSetting('hashtag'))
             {
@@ -180,6 +182,7 @@ class SocialAdminListController extends AdminListController
 
             if($form->isValid())
             {
+                $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('client_id', $form['client_id']->getData());
                 $settings->setSetting('client_secret', $form['client_secret']->getData());
                 $settings->setSetting('hashtag', $form['hashtag']->getData());
@@ -197,6 +200,7 @@ class SocialAdminListController extends AdminListController
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
             'isAuthenticated' => $settings->getIsAuthenticated(),
+            'isActive' => $settings->getIsActive(),
         ));
     }
 
@@ -210,11 +214,14 @@ class SocialAdminListController extends AdminListController
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), true);
 
+        $formData = array(
+            'active' => $settings->getSetting('active')
+        );
+
         if($settings->getSetting('consumer_key'))
         {
-            $formData = array(
-                'consumer_key' => $settings->getSetting('consumer_key'),
-            );
+            $formData['consumer_key'] = $settings->getSetting('consumer_key');
+
             if($settings->getSetting('user_or_hashtag'))
             {
                 $formData['user_or_hashtag'] = $settings->getSetting('user_or_hashtag');
@@ -240,6 +247,7 @@ class SocialAdminListController extends AdminListController
 
             if($form->isValid())
             {
+                $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('consumer_key', $form['consumer_key']->getData());
                 $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());
                 $settings->setSetting('tumblr_url', $form['tumblr_url']->getData());
@@ -269,12 +277,14 @@ class SocialAdminListController extends AdminListController
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), true);
 
+        $formData = array(
+            'active' => $settings->getSetting('active')
+        );
+
         if($settings->getSetting('consumer_key') and $settings->getSetting('consumer_secret'))
         {
-            $formData = array(
-                'consumer_key' => $settings->getSetting('consumer_key'),
-                'consumer_secret' => $settings->getSetting('consumer_secret'),
-            );
+            $formData['consumer_key'] = $settings->getSetting('consumer_key');
+            $formData['consumer_secret'] = $settings->getSetting('consumer_secret');
 
             if($settings->getSetting('user_or_hashtag'))
             {
@@ -305,6 +315,7 @@ class SocialAdminListController extends AdminListController
 
             if($form->isValid())
             {
+                $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('consumer_key', $form['consumer_key']->getData());
                 $settings->setSetting('consumer_secret', $form['consumer_secret']->getData());
                 $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());
@@ -368,12 +379,14 @@ class SocialAdminListController extends AdminListController
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo', array(), true);
 
+        $formData = array(
+            'active' => $settings->getSetting('active')
+        );
+
         if($settings->getSetting('consumer_key') and $settings->getSetting('consumer_secret'))
         {
-            $formData = array(
-                'consumer_key' => $settings->getSetting('consumer_key'),
-                'consumer_secret' => $settings->getSetting('consumer_secret'),
-            );
+            $formData['consumer_key'] = $settings->getSetting('consumer_key');
+            $formData['consumer_secret'] = $settings->getSetting('consumer_secret');
 
             if($settings->getSetting('user_or_hashtag'))
             {
@@ -444,6 +457,7 @@ class SocialAdminListController extends AdminListController
 
             if($form->isValid())
             {
+                $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('consumer_key', $form['consumer_key']->getData());
                 $settings->setSetting('consumer_secret', $form['consumer_secret']->getData());
                 $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());

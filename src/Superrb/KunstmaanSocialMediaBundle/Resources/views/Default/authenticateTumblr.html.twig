@@ -30,7 +30,7 @@
         <fieldset class="form__fieldset--padded">
 
             {% if isAuthenticated %}
-                <p>Your account is currently <strong>active</strong> and <strong>logged in</strong>.</p>
+                <p>Your account is currently <strong>authenticated</strong> and <strong>logged in</strong>.</p>
             {% else %}
                 <p>Use this page to add the customer key and other settings in order to allow this website access to Tumblr.</p>
                 <p>Your redirect URL is: <strong>{{ redirectUrl }}</strong>, you will need this to set up the Tumblr App. Apps can be set up at <a href="https://www.tumblr.com/oauth/apps" target="_blank">https://www.tumblr.com/oauth/apps</a></p>
