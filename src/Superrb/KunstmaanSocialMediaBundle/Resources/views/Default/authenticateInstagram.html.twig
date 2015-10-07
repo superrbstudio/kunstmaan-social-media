@@ -38,7 +38,7 @@
             {% endif %}
 
             {{ form_widget(form) }}
-            <input type="submit" value="Log in to Instagram">
+            <input type="submit" value="{% if isActive %}Update Instagram Details{% else %}Log in to Instagram{% endif %}">
         </fieldset>
     </form>
 {% endblock content %}

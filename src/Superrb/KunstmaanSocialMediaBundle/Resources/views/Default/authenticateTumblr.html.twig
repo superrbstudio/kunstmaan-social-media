@@ -37,7 +37,7 @@
             {% endif %}
 
             {{ form_widget(form) }}
-            <input type="submit" value="Log in to Tumblr">
+            <input type="submit" value="{% if isActive %}Update Tumblr Details{% else %}Log in to Tumblr{% endif %}">
         </fieldset>
     </form>
 {% endblock content %}
