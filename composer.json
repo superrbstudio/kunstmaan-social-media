@@ -15,7 +15,7 @@
   ],
   "require": {
     "kunstmaan/bundles-cms": "~3.0",
-    "guzzlehttp/guzzle" : "~6.0.2",
+    "guzzlehttp/guzzle" : "6.*",
     "hwi/oauth-bundle" : "~0.3.8"
   },
   "autoload": {
