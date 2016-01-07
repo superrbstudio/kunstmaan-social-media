@@ -137,7 +137,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         $social->setDatePosted($dateTime);
 
                         $social->setLink($post->link);
-                        if(isset($post->caption->text)) { $social->setInstagramCaption(mysql_real_escape_string(utf8_encode($post->caption->text))); }
+                        if(isset($post->caption->text)) { $social->setInstagramCaption(utf8_encode($post->caption->text)); }
                         $social->setInstagramImageUrl($post->images->standard_resolution->url);
 
                         if(isset($post->location->latitude) and isset($post->location->longitude))
@@ -253,12 +253,12 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
                                 if($post->type == 'text')
                                 {
-                                    $social->setTumblrTitle(mysql_real_escape_string(utf8_encode($post->title)));
-                                    $social->setTumblrBodyText(mysql_real_escape_string(utf8_encode($post->body)));
+                                    $social->setTumblrTitle(utf8_encode($post->title));
+                                    $social->setTumblrBodyText(utf8_encode($post->body));
                                 }
                                 if($post->type == 'photo' || $post->type == 'video')
                                 {
-                                    $social->setTumblrCaption(mysql_real_escape_string(utf8_encode($post->caption)));
+                                    $social->setTumblrCaption(utf8_encode($post->caption));
                                 }
                                 if($post->type == 'photo')
                                 {
@@ -375,7 +375,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         $social->setDatePosted($dateTime);
 
                         $social->setLink('https://twitter.com/' . $post->user->screen_name . '/status/' . $post->id);
-                        if(isset($post->text)) { $social->setTwitterContent(mysql_real_escape_string(utf8_encode($post->text))); }
+                        if(isset($post->text)) { $social->setTwitterContent(utf8_encode($post->text)); }
 
                         if(isset($post->entities->media[0]) and $post->entities->media[0]->type == 'photo')
                         {
@@ -469,7 +469,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     $social->setDatePosted($dateTime);
 
                     $social->setLink($post->link);
-                    $social->setVimeoTitle(mysql_real_escape_string(utf8_encode($post->name)));
+                    $social->setVimeoTitle(utf8_encode($post->name));
                     $social->setVimeoDescription($post->description);
                     $social->setVimeoThumbnailImageUrl($thumbnail->link);
 
