@@ -27,7 +27,7 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     /**
      * @var AclHelper
      */
-    private $aclHelper = null;
+    protected $aclHelper = null;
 
     /**
      * @var string
