@@ -27,7 +27,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="settings", type="json_array")
+     * @ORM\Column(name="settings", type="json_array", nullable=true)
      */
     private $settings;
 
