@@ -549,7 +549,7 @@ class SocialAdminListController extends AdminListController
                 $this->getDoctrine()->getManager()->flush();
             }
         }
-        
+
         return new JsonResponse(array('success' => true));
     }
 }
