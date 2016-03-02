@@ -19,3 +19,16 @@
         {{ adminlist_widget(adminlist, adminlist.getIndexUrl()["path"], adminlist.getIndexUrl()) }}
     {% endif %}
 {% endblock %}
+
+{% block extrajavascript %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.social-media-approval').each(function() {
+                $(this).on('change', function() {
+                    $.ajax('{{ path('superrbkunstmaansocialmediabundle_admin_social_approve') }}/' + $(this).data('id'));
+                })
+            });
+        });
+    </script>
+{% endblock %}

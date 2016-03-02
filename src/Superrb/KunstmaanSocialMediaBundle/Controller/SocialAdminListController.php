@@ -8,6 +8,7 @@ use Kunstmaan\AdminListBundle\AdminList\Configurator\AdminListConfiguratorInterf
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Superrb\KunstmaanSocialMediaBundle\Form\InstagramAuthenticationType;
 use Superrb\KunstmaanSocialMediaBundle\Form\TwitterAuthenticationType;
@@ -68,10 +69,10 @@ class SocialAdminListController extends AdminListController
      * @Method({"GET", "POST"})
      * @return array
      */
-    public function addAction(Request $request)
-    {
-        return parent::doAddAction($this->getAdminListConfigurator(), null, $request);
-    }
+//    public function addAction(Request $request)
+//    {
+//        return parent::doAddAction($this->getAdminListConfigurator(), null, $request);
+//    }
 
     /**
      * The edit action
@@ -98,10 +99,10 @@ class SocialAdminListController extends AdminListController
      *
      * @return array
      */
-    public function deleteAction(Request $request, $id)
-    {
-        return parent::doDeleteAction($this->getAdminListConfigurator(), $id, $request);
-    }
+//    public function deleteAction(Request $request, $id)
+//    {
+//        return parent::doDeleteAction($this->getAdminListConfigurator(), $id, $request);
+//    }
 
     /**
      * The export action
@@ -523,5 +524,32 @@ class SocialAdminListController extends AdminListController
         $application->run($input, $output);
         $this->addFlash('success', 'Social Media feed is being updated in the background.');
         return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social'));
+    }
+
+    /**
+     * Approve or unapprove a post
+     *
+     * @Route("/approve-request/{id}", name="superrbkunstmaansocialmediabundle_admin_social_approve")
+     * @param Request $request
+     * @param $id
+     * @return JsonResponse
+     */
+    public function approvePostAction(Request $request, $id = null) {
+        if($id) {
+            $post = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->find($id);
+
+            if($post) {
+                if($post->getApproved()) {
+                    $post->setApproved(false);
+                } else {
+                    $post->setApproved(true);
+                }
+
+                $this->getDoctrine()->getManager()->persist($post);
+                $this->getDoctrine()->getManager()->flush();
+            }
+        }
+        
+        return new JsonResponse(array('success' => true));
     }
 }
