@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "kunstmaan/bundles-cms": "~3.0",
+    "kunstmaan/bundles-cms": "~3.5",
     "guzzlehttp/guzzle" : "6.*",
     "hwi/oauth-bundle" : "~0.3.8"
   },
