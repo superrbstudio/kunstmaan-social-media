@@ -12,27 +12,6 @@
     </div>
 {% endblock %}
 
-{% block extra_actions_header %}
-    <div class="col-sm-6 col-md-4">
-        <div class="app__content__header__extra-actions">
-            <div class="btn-group">
-                <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">Settings
-                    <i class="fa fa-caret-down btn__icon"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                        <a href="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram') }}">Instagram Settings</a>
-                        <a href="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr') }}">Tumblr Settings</a>
-                        <a href="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter') }}">Twitter Settings</a>
-                        <a href="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo') }}">Vimeo Settings</a>
-                        <a href="{{ url('superrbkunstmaansocialmediabundle_admin_social_update') }}">Update Feed</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
 {% block content %}
     {% if adminlist.getIndexUrl()['params'] is defined %}
         {{ adminlist_widget(adminlist, adminlist.getIndexUrl()["path"], adminlist.getIndexUrl()['params']) }}

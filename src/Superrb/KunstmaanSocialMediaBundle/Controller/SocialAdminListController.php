@@ -42,6 +42,16 @@ class SocialAdminListController extends AdminListController
     }
 
     /**
+     * The false index action
+     *
+     * @Route("/", name="superrbkunstmaansocialmediabundle_admin_social_false")
+     */
+    public function falseIndexAction(Request $request)
+    {
+        return parent::doIndexAction($this->getAdminListConfigurator(), $request);
+    }
+
+    /**
      * The index action
      *
      * @Route("/", name="superrbkunstmaansocialmediabundle_admin_social")
@@ -511,7 +521,7 @@ class SocialAdminListController extends AdminListController
         // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
         $application->run($input, $output);
-
+        $this->addFlash('success', 'Social Media feed is being updated in the background.');
         return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social'));
     }
 }
