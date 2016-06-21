@@ -95,14 +95,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             $instagram = new Client(array('base_uri' => "https://api.instagram.com/v1/"));
             $query = array('access_token' => $settings->getSetting('access_token'), 'count' => 50);
 
-            if(!$settings->getSetting('hashtag'))
-            {
-                $response = $instagram->get('users/' . $settings->getSetting('user_id') . '/media/recent', array('query' => $query));
-            }
-            else
-            {
-                $response = $instagram->get('tags/' . htmlentities($settings->getSetting('hashtag')) . '/media/recent', array('query' => $query));
-            }
+            $response = $instagram->get('users/self/media/recent', array('query' => $query));
 
             if($response->getStatusCode() == 200)
             {

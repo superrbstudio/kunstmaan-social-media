@@ -130,7 +130,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                     try
                     {
                         $client = new Client(array('base_uri' => "https://api.instagram.com/v1/"));
-                        $response = $client->get('users/self/feed', array(
+                        $response = $client->get('users/self', array(
                             'query' => array(
                                 'access_token' => $this->getSetting('access_token')
                             )
