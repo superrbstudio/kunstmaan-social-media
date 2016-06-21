@@ -137,6 +137,11 @@ class SocialAdminListController extends AdminListController
             $formData['client_id'] = $settings->getSetting('client_id');
             $formData['client_secret'] = $settings->getSetting('client_secret');
 
+            if($settings->getSetting('hashtag'))
+            {
+                $formData['hashtag'] = $settings->getSetting('hashtag');
+            }
+
             $form = $this->createForm(new InstagramAuthenticationType(), $formData);
         }
         else
@@ -191,6 +196,7 @@ class SocialAdminListController extends AdminListController
                 $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('client_id', $form['client_id']->getData());
                 $settings->setSetting('client_secret', $form['client_secret']->getData());
+                $settings->setSetting('hashtag', $form['hashtag']->getData());
                 $settings->setSetting('redirect_url', $redirectUrl);
 
                 $this->getDoctrine()->getManager()->persist($settings);

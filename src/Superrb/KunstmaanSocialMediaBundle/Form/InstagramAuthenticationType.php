@@ -32,6 +32,11 @@ class InstagramAuthenticationType extends AbstractType
         $builder->add('client_secret', TextType::class, array(
             'label' => 'Instagram App Client Secret',
         ));
+
+        $builder->add('hashtag', TextType::class, array(
+            'required' => false,
+            'label' => 'Feed Hashtag (without #, leave blank to use your feed)',
+        ));
     }
 
     /**
