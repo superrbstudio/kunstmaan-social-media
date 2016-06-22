@@ -162,7 +162,7 @@ class SocialAdminListController extends AdminListController
 
             try
             {
-                $response = $instagramClient->post('/oauth/access_token', array('body' => $data));
+                $response = $instagramClient->post('/oauth/access_token', array('body' => htmlspecialchars($data)));
 
                 if($response->getStatusCode() == 200)
                 {
@@ -180,11 +180,13 @@ class SocialAdminListController extends AdminListController
             }
             catch (\Exception $e)
             {
-                var_dump('<error>Unable to update Instagram: ' . $e->getMessage() . '</error>');
+                // we have returned from instagram with an error
+                $logger = $this->get('logger');
+                $logger->error('Unable to update Instagram: ' . $e->getMessage());
+                $this->addFlash('error', 'Unable to update Instagram: ' . $e->getMessage());
+                return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'));
             }
         }
-
-        // we have returned from instagram with an error
 
         // form has been submitted validate and redirect to instagram
         if($request->getMethod() == 'POST')
