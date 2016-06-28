@@ -132,36 +132,40 @@ class SocialAdminListController extends AdminListController
             'active' => $settings->getSetting('active')
         );
 
-        if($settings->getSetting('client_id') and $settings->getSetting('client_secret'))
-        {
+        if($settings->getSetting('client_id')) {
             $formData['client_id'] = $settings->getSetting('client_id');
+        }
+
+        if($settings->getSetting('client_secret')) {
             $formData['client_secret'] = $settings->getSetting('client_secret');
-
-            if($settings->getSetting('hashtag'))
-            {
-                $formData['hashtag'] = $settings->getSetting('hashtag');
-            }
-
-            $form = $this->createForm(new InstagramAuthenticationType(), $formData);
         }
-        else
-        {
-            $form = $this->createForm(new InstagramAuthenticationType());
+
+
+        if($settings->getSetting('hashtag')) {
+            $formData['hashtag'] = $settings->getSetting('hashtag');
         }
+
+        if($settings->getSetting('profile_url')) {
+            $formData['profile_url'] = $settings->getSetting('profile_url');
+        }
+
+        $form = $this->createForm(new InstagramAuthenticationType(), $formData, array(
+            'method' => 'POST',
+            'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'),
+        ));
 
         // we have returned from instagram and have a code.
-        if($request->query->get('code', null) and $settings instanceof Setting)
-        {
+        if($request->query->get('code', null) and $settings instanceof Setting) {
             $code = $request->query->get('code');
             $instagramClient = new Client(array('base_uri' => "https://api.instagram.com"));
             $data = "client_id=" . $settings->getSetting('client_id')
                 . "&client_secret=" . $settings->getSetting('client_secret')
                 . "&grant_type=authorization_code"
                 . "&redirect_uri=" . $settings->getSetting('redirect_url')
-                . "&code=" . $code;
+                . "&code=" . $code
+                . "&scope=public_content";
 
-            try
-            {
+            try {
                 $response = $instagramClient->post('/oauth/access_token', array('body' => htmlspecialchars($data)));
 
                 if($response->getStatusCode() == 200)
@@ -175,36 +179,47 @@ class SocialAdminListController extends AdminListController
 
                     $this->getDoctrine()->getManager()->persist($settings);
                     $this->getDoctrine()->getManager()->flush();
+
+                    $this->addFlash('success', $this->get('translator')->trans('kuma_social.forms.instagram.messages.access_token_success'));
+                    return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'));
                 }
 
-            }
-            catch (\Exception $e)
-            {
+            } catch (\Exception $e) {
                 // we have returned from instagram with an error
                 $logger = $this->get('logger');
                 $logger->error('Unable to update Instagram: ' . $e->getMessage());
-                $this->addFlash('error', 'Unable to update Instagram: ' . $e->getMessage());
+                
+                $settings->setSetting('active', 'kuma_social.settings.active_no_api');
+                $this->getDoctrine()->getManager()->persist($settings);
+                $this->getDoctrine()->getManager()->flush();
+                
+                $this->addFlash('error', $this->get('translator')->trans('kuma_social.forms.instagram.messages.access_token_error') . $e->getMessage());
                 return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'));
             }
         }
 
         // form has been submitted validate and redirect to instagram
-        if($request->getMethod() == 'POST')
-        {
+        if($request->getMethod() == 'POST') {
             $form->handleRequest($request);
 
-            if($form->isValid())
-            {
+            if($form->isValid()) {
                 $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('client_id', $form['client_id']->getData());
                 $settings->setSetting('client_secret', $form['client_secret']->getData());
                 $settings->setSetting('hashtag', $form['hashtag']->getData());
+                $settings->setSetting('profile_url', $form['profile_url']->getData());
                 $settings->setSetting('redirect_url', $redirectUrl);
 
                 $this->getDoctrine()->getManager()->persist($settings);
                 $this->getDoctrine()->getManager()->flush();
 
-                return $this->redirect('https://api.instagram.com/oauth/authorize/?client_id=' . $settings->getSetting('client_id') . '&redirect_uri=' . $redirectUrl . '&response_type=code');
+                // We don't have a valid access token so try to get one
+                if(!$settings->getIsAuthenticated()) {
+                    return $this->redirect('https://api.instagram.com/oauth/authorize/?client_id=' . $settings->getSetting('client_id') . '&redirect_uri=' . $redirectUrl . '&response_type=code');
+                } else {
+                    $this->addFlash('success', $this->get('translator')->trans('kuma_social.forms.instagram.messages.settings_updated'));
+                    return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'));
+                }
             }
         }
 

@@ -1,0 +1,21 @@
+# Forms
+kuma_social:
+    settings:
+        disabled: Disabled
+        active_no_api: Active (Custom Posts Only)
+        active_api_feed: Active (Custom Posts and Feed Posts)
+        active_api_hashtag: Active (Custom Posts and Hashtag Search Posts)
+
+    forms:
+        instagram:
+            active: Status
+            app_client_id: Instagram App Client ID
+            app_client_secret: Instagram App Client Secret
+            hashtag: "Feed Hashtag (exclude the # from the front)"
+            profile_url: Profile URL
+            save: Update Instagram Details
+            messages:
+                access_token_error: Unable to generate Access Token:
+                access_token_success: Access Token Generated
+                settings_updated: Instagram Settings Updated
+                logged_in: You are logged in as

@@ -4,6 +4,7 @@ namespace Superrb\KunstmaanSocialMediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use MyProject\Proxies\__CG__\OtherProject\Proxies\__CG__\stdClass;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use GuzzleHttp\Client;
@@ -18,6 +19,17 @@ use GuzzleHttp\Client;
 class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 {
     /**
+     * Options for Instagram Settings
+     * @var array
+     */
+    static $instagramSettings = array(
+        'kuma_social.settings.disabled' => 'kuma_social.settings.disabled',
+        'kuma_social.settings.active_no_api' => 'kuma_social.settings.active_no_api',
+        'kuma_social.settings.active_api_feed' => 'kuma_social.settings.active_api_feed',
+        'kuma_social.settings.active_api_hashtag' => 'kuma_social.settings.active_api_hashtag',
+    );
+
+    /**
      * @var string
      *
      * @ORM\Column(name="social_type", type="string", length=255, unique=true)
@@ -31,8 +43,33 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      */
     private $settings;
 
+    /**
+     * Setting constructor.
+     */
     public function __construct()
     {
+    }
+
+    /**
+     * Determine the validation groups for Instagram settings
+     * 
+     * @param FormInterface $form
+     * @return array
+     */
+    static function determineInstagramValidationGroups(FormInterface $form) {
+        $data = $form->getData();
+
+        if(array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_no_api') {
+            $groups = array('active');
+        } elseif (array_key_exists('active', $data) and$data['active'] == 'kuma_social.settings.active_api_feed') {
+            $groups = array('active', 'api');
+        } elseif (array_key_exists('active', $data) and$data['active'] == 'kuma_social.settings.active_api_hashtag') {
+            $groups = array('active', 'api', 'hashtag');
+        } else {
+            $groups = array('disabled');
+        }
+
+        return $groups;
     }
 
     /**
@@ -291,33 +328,78 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 
         return $success;
     }
+
     /**
+     * Determines if the Feed is Active
+     *
      * @return bool
      */
-    public function getIsActive()
-    {
+    public function getIsActive() {
         $success = false;
 
         switch($this->getSocialType())
         {
             case 'instagram':
-                if($this->getSetting('active') == 'active')
-                {
+                if(in_array($this->getSetting('active'), array('kuma_social.settings.active_no_api', 'kuma_social.settings.active_api_feed', 'kuma_social.settings.active_api_hashtag'))) {
                     $success = true;
                 }
                 break;
+
             case 'tumblr':
                 if($this->getSetting('active') == 'active')
                 {
                     $success = true;
                 }
                 break;
+
             case 'twitter':
                 if($this->getSetting('active') == 'active')
                 {
                     $success = true;
                 }
                 break;
+
+            case 'vimeo':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+        }
+
+        return $success;
+    }
+
+    /**
+     * Determines if the Feed is Active and using the API (Not Custom Posts)
+     * 
+     * @return bool
+     */
+    public function getIsApiActive() {
+        $success = false;
+
+        switch($this->getSocialType())
+        {
+            case 'instagram':
+                if(in_array($this->getSetting('active'), array('kuma_social.settings.active_api_feed', 'kuma_social.settings.active_api_hashtag'))) {
+                    $success = true;
+                }
+                break;
+
+            case 'tumblr':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+
+            case 'twitter':
+                if($this->getSetting('active') == 'active')
+                {
+                    $success = true;
+                }
+                break;
+
             case 'vimeo':
                 if($this->getSetting('active') == 'active')
                 {

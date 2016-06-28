@@ -2,19 +2,82 @@
 {% form_theme form 'KunstmaanAdminBundle:Form:fields.html.twig' %}
 
 {% block content %}
-    <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram') }}" method="post" {{ form_enctype(form) }}>
+    {{ form_start(form) }}
         <fieldset class="form__fieldset--padded">
 
-            {% if isAuthenticated %}
-                <p>Your account is currently <strong>authenticated</strong> and <strong>logged in</strong> as <strong>{{ settings.getSetting('user_name') }}</strong></p>
-                <p>If you want to change the settings below you must do it as the current logged in user.</p>
+            {% if isAuthenticated and settings.getSetting('user_name') %}
+                <p>{{ 'kuma_social.forms.instagram.messages.logged_in'|trans }} <strong>{{ settings.getSetting('user_name') }}</strong></p>
             {% else %}
                 <p>Use this page to generate an access token to allow this website access to your Instagram Account.</p>
                 <p>Your redirect URL is: <strong>{{ redirectUrl }}</strong>, you will need this to set up the Instagram App. Apps can be set up at <a href="https://instagram.com/developer/" target="_blank">https://instagram.com/developer/</a></p>
             {% endif %}
 
-            {{ form_widget(form) }}
-            <input type="submit" value="{% if isAuthenticated %}Update Instagram Details{% else %}Log in to Instagram{% endif %}">
+            {{ form_row(form.active) }}
+
+            <div id="kuma-social-app-details">
+                {{ form_row(form.client_id) }}
+                {{ form_row(form.client_secret) }}
+            </div>
+            <div id="kuma-social-hashtag">
+                {{ form_row(form.hashtag) }}
+            </div>
+            <div id="kuma-social-profile-url">
+                {{ form_row(form.profile_url) }}
+            </div>
+
+            {{ form_row(form.save) }}
+
         </fieldset>
-    </form>
+    {{ form_end(form) }}
 {% endblock content %}
+
+{% block extrajavascript %}
+
+    <script>
+        $('document').ready(function() {
+            var kumaSocialActive = $('#instagram_authentication_active');
+
+            function kumaSocialInstagramForm() {
+                if(kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_no_api'){
+                    $('#kuma-social-app-details').css('display', 'none');
+                    $('#kuma-social-hashtag').css('display', 'none');
+                    $('#kuma-social-profile-url').css('display', 'block');
+                    $('#instagram_authentication_client_id').attr('required', null);
+                    $('#instagram_authentication_client_secret').attr('required', null);
+                    $('#instagram_authentication_hashtag').attr('required', null);
+                    $('#instagram_authentication_profile_url').attr('required', 'required');
+                } else if (kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_api_feed') {
+                    $('#kuma-social-app-details').css('display', 'block');
+                    $('#kuma-social-hashtag').css('display', 'none');
+                    $('#kuma-social-profile-url').css('display', 'block');
+                    $('#instagram_authentication_client_id').attr('required', 'required');
+                    $('#instagram_authentication_client_secret').attr('required', 'required');
+                    $('#instagram_authentication_hashtag').attr('required', null);
+                    $('#instagram_authentication_profile_url').attr('required', 'required');
+                } else if (kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_api_hashtag') {
+                    $('#kuma-social-app-details').css('display', 'block');
+                    $('#kuma-social-hashtag').css('display', 'block');
+                    $('#kuma-social-profile-url').css('display', 'block');
+                    $('#instagram_authentication_client_id').attr('required', 'required');
+                    $('#instagram_authentication_client_secret').attr('required', 'required');
+                    $('#instagram_authentication_hashtag').attr('required', 'required');
+                    $('#instagram_authentication_profile_url').attr('required', 'required');
+                } else {
+                    $('#kuma-social-app-details').css('display', 'none');
+                    $('#kuma-social-hashtag').css('display', 'none');
+                    $('#kuma-social-profile-url').css('display', 'none');
+                    $('#instagram_authentication_client_id').attr('required', null);
+                    $('#instagram_authentication_client_secret').attr('required', null);
+                    $('#instagram_authentication_hashtag').attr('required', '');
+                    $('#instagram_authentication_profile_url').attr('required', null);
+                }
+            }
+
+            kumaSocialInstagramForm();
+            kumaSocialActive.on('change', function() {
+                kumaSocialInstagramForm();
+            })
+        });
+    </script>
+
+{% endblock %}

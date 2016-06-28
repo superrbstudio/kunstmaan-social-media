@@ -23,6 +23,13 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             ->setDescription('Updates the social media feed items');
     }
 
+    /**
+     * Run the Process to update feeds
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return bool
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('<info>Starting Social Media Feed Update</info>');
@@ -30,42 +37,27 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update instagram if required
         $instagramSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
 
-        if($instagramSetting->getIsActive())
-        {
-            if($instagramSetting->getIsAuthenticated())
-            {
-                $this->updateInstagram($input, $output, $instagramSetting);
-            }
-        } else
-        {
+        if($instagramSetting->getIsApiActive() and $instagramSetting->getIsAuthenticated()) {
+            $this->updateInstagram($input, $output, $instagramSetting);
+        } else {
             $output->writeln('Instagram Disabled');
         }
 
         // update tumblr if required
         $tumblrSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
 
-        if($tumblrSetting->getIsActive())
-        {
-            if($tumblrSetting->getIsAuthenticated())
-            {
-                $this->updateTumblr($input, $output, $tumblrSetting);
-            }
-        } else
-        {
+        if($tumblrSetting->getIsApiActive() and $tumblrSetting->getIsAuthenticated()) {
+            $this->updateTumblr($input, $output, $tumblrSetting);
+        } else {
             $output->writeln('Tumblr Disabled');
         }
 
         // update twitter if required
         $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
 
-        if($twitterSetting->getIsActive())
-        {
-            if($twitterSetting->getIsAuthenticated())
-            {
-                $this->updateTwitter($input, $output, $twitterSetting);
-            }
-        } else
-        {
+        if($twitterSetting->getIsApiActive() and $twitterSetting->getIsAuthenticated()) {
+            $this->updateTwitter($input, $output, $twitterSetting);
+        } else {
             $output->writeln('Twitter Disabled');
         }
 
@@ -73,21 +65,26 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
         // update vimeo if required
         $vimeoSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
 
-        if($vimeoSetting->getIsActive())
-        {
-            if($vimeoSetting->getIsAuthenticated())
-            {
-                $this->updateVimeo($input, $output, $vimeoSetting);
-            }
-        } else
-        {
+        if($vimeoSetting->getIsApiActive() and $vimeoSetting->getIsAuthenticated()) {
+            $this->updateVimeo($input, $output, $vimeoSetting);
+        } else {
             $output->writeln('Vimeo Disabled');
         }
+
+        return true;
     }
 
+    /**
+     * Update the Instagram Posts
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param Setting $settings
+     */
     protected function updateInstagram(InputInterface $input, OutputInterface $output, Setting $settings)
     {
         $doctrine = $this->getContainer()->get('doctrine');
+        $logger = $this->getContainer()->get('logger');
         $output->writeln('Updating Instagram');
 
         try
@@ -95,37 +92,28 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             $instagram = new Client(array('base_uri' => "https://api.instagram.com/v1/"));
             $query = array('access_token' => $settings->getSetting('access_token'), 'count' => 50);
 
-            if(!$settings->getSetting('hashtag'))
-            {
+            if($settings->getSetting('active') == 'kuma_social.settings.active_api_hashtag') {
+                $response = $instagram->get('tags/' . htmlentities($settings->getSetting('hashtag')) . '/media/recent', array('query' => $query));
+            } else {
                 $response = $instagram->get('users/' . $settings->getSetting('user_id') . '/media/recent', array('query' => $query));
             }
-            else
-            {
-                $response = $instagram->get('tags/' . htmlentities($settings->getSetting('hashtag')) . '/media/recent', array('query' => $query));
-            }
 
-            if($response->getStatusCode() == 200)
-            {
+            if($response->getStatusCode() == 200) {
                 $posts = json_decode($response->getBody()->getContents());
 
                 $added = 0;
                 $updated = 0;
 
-                if($posts)
-                {
-                    foreach($posts->data as $post)
-                    {
+                if($posts) {
+                    foreach($posts->data as $post) {
                         $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'instagram'));
 
-                        if(!$social)
-                        {
+                        if(!$social) {
                             $social = new Social();
                             $social->setSocialId($post->id);
                             $social->setType('instagram');
                             $added++;
-                        }
-                        else
-                        {
+                        } else {
                             $updated++;
                         }
 
@@ -140,14 +128,12 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         if(isset($post->caption->text)) { $social->setInstagramCaption(utf8_encode($post->caption->text)); }
                         $social->setInstagramImageUrl($post->images->standard_resolution->url);
 
-                        if(isset($post->location->latitude) and isset($post->location->longitude))
-                        {
+                        if(isset($post->location->latitude) and isset($post->location->longitude)) {
                             $social->setLatitude($post->location->latitude);
                             $social->setLongitude($post->location->longitude);
                         }
 
-                        if($post->type == 'video')
-                        {
+                        if($post->type == 'video') {
                             $social->setInstagramVideoUrl($post->videos->standard_resolution->url);
                         }
 
@@ -155,20 +141,19 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     }
                 }
 
-
                 $output->writeln('Instagram Updated: ' . $added . ' Added, ' . $updated . ' Updated');
                 $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
                 $doctrine->getManager()->persist($settings);
                 $doctrine->getManager()->flush();
-            }
-            else
-            {
+            } else {
+                $logger->error('Unable to update Instagram: ' . $response->getStatusCode() . ' response code given');
                 $output->writeln('<error>Unable to update Instagram: ' . $response->getStatusCode() . ' response code given</error>');
             }
         }
         catch (\Exception $e)
         {
-            $output->writeln('<error>Unable to update Instagram: ' . $e->getMessage() . '</error>');
+            $logger->error('Unable to update Instagram: ' . $e->getMessage());
+            $output->writeln('<error>Unable to update Instagram</error>');
         }
     }
 
