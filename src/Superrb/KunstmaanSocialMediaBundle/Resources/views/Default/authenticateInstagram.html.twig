@@ -1,8 +1,40 @@
 {% extends 'KunstmaanAdminBundle:Default:layout.html.twig' %}
 {% form_theme form 'KunstmaanAdminBundle:Form:fields.html.twig' %}
 
-{% block content %}
+{% block header %}
     {{ form_start(form) }}
+    {{ parent() }}
+{% endblock %}
+
+{% block extra_actions_header %}
+    <div class="col-sm-6 col-md-4">
+        <!-- Main-actions -->
+        <div class="js-auto-collapse-buttons page-main-actions page-main-actions--no-tabs page-main-actions--inside-extra-actions-header">
+            <div class="btn-group">
+                {% block actions %}
+                    <button type="submit" class="btn btn-primary btn--raise-on-hover">
+                        {{ 'Save' | trans }}
+                    </button>
+                    <a href="{{ path('superrbkunstmaansocialmediabundle_admin_social') }}" class="btn btn-default btn--raise-on-hover">
+                        {{ 'form.cancel' | trans }}
+                    </a>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll-actions -->
+    <div class="page-main-actions page-main-actions--top" id="page-main-actions-top">
+        <div class="btn-group">
+            {{ block('actions') }}
+            <button type="button" class="js-scroll-to-top btn btn-default btn--raise-on-hover">
+                <i class="fa fa-caret-up"></i>
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
         <fieldset class="form__fieldset--padded">
 
             {% if isAuthenticated and settings.getSetting('user_name') %}
@@ -25,8 +57,6 @@
                 {{ form_row(form.profile_url) }}
             </div>
 
-            {{ form_row(form.save) }}
-
         </fieldset>
     {{ form_end(form) }}
 {% endblock content %}
@@ -35,48 +65,48 @@
 
     <script>
         $('document').ready(function() {
-            var kumaSocialActive = $('#instagram_authentication_active');
+            var kumaSocialActive = $('#{{ form.vars.name }}_active');
 
             function kumaSocialInstagramForm() {
                 if(kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_no_api'){
                     $('#kuma-social-app-details').css('display', 'none');
                     $('#kuma-social-hashtag').css('display', 'none');
                     $('#kuma-social-profile-url').css('display', 'block');
-                    $('#instagram_authentication_client_id').attr('required', null);
-                    $('#instagram_authentication_client_secret').attr('required', null);
-                    $('#instagram_authentication_hashtag').attr('required', null);
-                    $('#instagram_authentication_profile_url').attr('required', 'required');
+                    $('#{{ form.vars.name }}_client_id').attr('required', null);
+                    $('#{{ form.vars.name }}_client_secret').attr('required', null);
+                    $('#{{ form.vars.name }}_hashtag').attr('required', null);
+                    $('#{{ form.vars.name }}_profile_url').attr('required', 'required');
                 } else if (kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_api_feed') {
                     $('#kuma-social-app-details').css('display', 'block');
                     $('#kuma-social-hashtag').css('display', 'none');
                     $('#kuma-social-profile-url').css('display', 'block');
-                    $('#instagram_authentication_client_id').attr('required', 'required');
-                    $('#instagram_authentication_client_secret').attr('required', 'required');
-                    $('#instagram_authentication_hashtag').attr('required', null);
-                    $('#instagram_authentication_profile_url').attr('required', 'required');
+                    $('#{{ form.vars.name }}_client_id').attr('required', 'required');
+                    $('#{{ form.vars.name }}_client_secret').attr('required', 'required');
+                    $('#{{ form.vars.name }}_hashtag').attr('required', null);
+                    $('#{{ form.vars.name }}_profile_url').attr('required', 'required');
                 } else if (kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_api_hashtag') {
                     $('#kuma-social-app-details').css('display', 'block');
                     $('#kuma-social-hashtag').css('display', 'block');
                     $('#kuma-social-profile-url').css('display', 'block');
-                    $('#instagram_authentication_client_id').attr('required', 'required');
-                    $('#instagram_authentication_client_secret').attr('required', 'required');
-                    $('#instagram_authentication_hashtag').attr('required', 'required');
-                    $('#instagram_authentication_profile_url').attr('required', 'required');
+                    $('#{{ form.vars.name }}_client_id').attr('required', 'required');
+                    $('#{{ form.vars.name }}_client_secret').attr('required', 'required');
+                    $('#{{ form.vars.name }}_hashtag').attr('required', 'required');
+                    $('#{{ form.vars.name }}_profile_url').attr('required', 'required');
                 } else {
                     $('#kuma-social-app-details').css('display', 'none');
                     $('#kuma-social-hashtag').css('display', 'none');
                     $('#kuma-social-profile-url').css('display', 'none');
-                    $('#instagram_authentication_client_id').attr('required', null);
-                    $('#instagram_authentication_client_secret').attr('required', null);
-                    $('#instagram_authentication_hashtag').attr('required', '');
-                    $('#instagram_authentication_profile_url').attr('required', null);
+                    $('#{{ form.vars.name }}_client_id').attr('required', null);
+                    $('#{{ form.vars.name }}_client_secret').attr('required', null);
+                    $('#{{ form.vars.name }}_hashtag').attr('required', '');
+                    $('#{{ form.vars.name }}_profile_url').attr('required', null);
                 }
             }
 
             kumaSocialInstagramForm();
             kumaSocialActive.on('change', function() {
                 kumaSocialInstagramForm();
-            })
+            });
         });
     </script>
 

@@ -37,7 +37,7 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     /**
      * @var string
      */
-    private $editTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:edit.html.twig';
+    private $addTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:addCustomPost.html.twig';
 
     /**
      * @param EntityManager $em        The entity manager
@@ -110,6 +110,16 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
      */
     public function canAdd()
     {
+        return true;
+    }
+
+    /**
+     * @param object|array $item
+     *
+     * @return bool
+     */
+    public function canEdit($item)
+    {
         return false;
     }
 
@@ -136,9 +146,9 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     /**
      * @return string
      */
-    public function getEditTemplate()
+    public function getAddTemplate()
     {
-        return $this->editTemplate;
+        return $this->addTemplate;
     }
 
     /**

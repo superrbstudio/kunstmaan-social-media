@@ -3,12 +3,11 @@
 namespace Superrb\KunstmaanSocialMediaBundle\Form;
 
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
 
 /**
  * The type for Social
  */
-class SocialAdminType extends AbstractType
+class SocialAdminType extends SocialType
 {
     /**
      * Builds the form.
@@ -23,16 +22,18 @@ class SocialAdminType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('approved');
+        parent::buildForm($builder, $options);
+        $builder->remove('type');
+        $builder->remove('username');
+        $builder->remove('link');
+        $builder->remove('datePosted');
+        $builder->remove('customImage');
     }
 
     /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
+     * @return string
      */
-    public function getName()
-    {
-        return 'social_form';
+    public function getBlockPrefix(){
+        return 'SocialAdminType';
     }
 }

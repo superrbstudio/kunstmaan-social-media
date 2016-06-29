@@ -1,5 +1,13 @@
 kuma_social:
     forms:
+        social:
+            type: Please select the type
+            username: Please enter the Username
+            date_posted: Please enter the posted date
+            date_posted_invalid: Please enter an valid date
+            link: Please enter the link
+            link_invalid: Please enter a valid link
+            instagram_caption: Please enter the Instagram Caption
         instagram:
             client_id: Please enter a Client ID,
             client_secret: Please enter a Client Secret

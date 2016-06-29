@@ -19,6 +19,7 @@ use GuzzleHttp\Client;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Superrb\KunstmaanSocialMediaBundle\Form\SocialAddType;
 
 /**
  * The admin list controller for Social
@@ -69,10 +70,13 @@ class SocialAdminListController extends AdminListController
      * @Method({"GET", "POST"})
      * @return array
      */
-//    public function addAction(Request $request)
-//    {
-//        return parent::doAddAction($this->getAdminListConfigurator(), null, $request);
-//    }
+    public function addAction(Request $request)
+    {
+        $adminListConfigurator = $this->getAdminListConfigurator();
+        $adminListConfigurator->setAdminType(new SocialAddType());
+        
+        return parent::doAddAction($adminListConfigurator, null, $request);
+    }
 
     /**
      * The edit action
@@ -84,10 +88,10 @@ class SocialAdminListController extends AdminListController
      *
      * @return array
      */
-    public function editAction(Request $request, $id)
-    {
-        return parent::doEditAction($this->getAdminListConfigurator(), $id, $request);
-    }
+//    public function editAction(Request $request, $id)
+//    {
+//        return parent::doEditAction($this->getAdminListConfigurator(), $id, $request);
+//    }
 
     /**
      * The delete action
@@ -152,6 +156,9 @@ class SocialAdminListController extends AdminListController
         $form = $this->createForm(new InstagramAuthenticationType(), $formData, array(
             'method' => 'POST',
             'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'),
+            'attr' => array(
+                'novalidate' => 'novalidate',
+            ),
         ));
 
         // we have returned from instagram and have a code.

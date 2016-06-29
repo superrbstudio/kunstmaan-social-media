@@ -4,6 +4,9 @@ namespace Superrb\KunstmaanSocialMediaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Kunstmaan\MediaBundle\Entity\Media;
+use Kunstmaan\AdminBundle\Entity\AbstractEntity;
+use Symfony\Component\Form\FormInterface;
 
 /**
  * Social
@@ -12,8 +15,15 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="Superrb\KunstmaanSocialMediaBundle\Repository\SocialRepository")
  * @ORM\HasLifecycleCallbacks()
  */
-class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
+class Social extends AbstractEntity
 {
+    static $availableTypes = array(
+        'instagram' => 'instagram',
+        //'tumblr' => 'tumblr',
+        //'twitter' => 'twitter',
+        //'vimeo' => 'vimeo',
+    );
+
     /**
      * @var datetime $created
      *
@@ -33,14 +43,14 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="social_id", type="string", length=255)
+     * @ORM\Column(name="social_id", type="string", length=255, nullable=true)
      */
-    private $socialId;
+    private $socialId = 'custom';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=255)
+     * @ORM\Column(name="username", type="string", length=255, nullable=true)
      */
     private $username;
 
@@ -68,7 +78,7 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="link", type="string", length=255)
+     * @ORM\Column(name="link", type="string", length=255, nullable=true)
      */
     private $link;
 
@@ -247,6 +257,47 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      */
     private $tumblrVideoThumbnailImageUrl;
 
+    /**
+     * @var \Kunstmaan\MediaBundle\Entity\Media
+     *
+     * @ORM\ManyToOne(targetEntity="Kunstmaan\MediaBundle\Entity\Media")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="custom_image_id", referencedColumnName="id")
+     * })
+     */
+    private $customImage;
+
+    /**
+     * Determine validation groups for custom posts
+     *
+     * @param FormInterface $form
+     * @return array
+     */
+    static function determineCustomPostValidationGroups(FormInterface $form) {
+        $data = $form->getData();
+        $groups = array('default');
+
+        switch($data->getType()) {
+            case 'instagram':
+                $groups[] = 'instagram';
+                break;
+
+            case 'tumblr':
+                $groups[] = 'tumblr';
+                break;
+
+            case 'twitter':
+                $groups[] = 'twitter';
+                break;
+
+            case 'vimeo':
+                $groups[] = 'vimeo';
+                break;
+        }
+
+        return $groups;
+    }
+
 
     /**
      * Set socialId
@@ -375,6 +426,11 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
      */
     public function getImage()
     {
+        // Return the Custom Image if there is one
+        if($this->getCustomImage()) {
+            return $this->getCustomImage()->getUrl();
+        }
+
         switch($this->getType())
         {
             case 'instagram':
@@ -1102,5 +1158,28 @@ class Social extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     public function getTwitterVideoUrl()
     {
         return $this->twitterVideoUrl;
+    }
+
+    /**
+     * Set customImage
+     *
+     * @param Media|null $customImage
+     * @return $this
+     */
+    public function setCustomImage(Media $customImage = null)
+    {
+        $this->customImage = $customImage;
+
+        return $this;
+    }
+
+    /**
+     * Get customImage
+     *
+     * @return Media
+     */
+    public function getCustomImage()
+    {
+        return $this->customImage;
     }
 }

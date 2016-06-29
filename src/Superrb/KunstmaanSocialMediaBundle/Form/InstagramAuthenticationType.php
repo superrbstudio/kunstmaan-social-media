@@ -87,10 +87,6 @@ class InstagramAuthenticationType extends AbstractType
                 )),
             ),
         ));
-
-        $builder->add('save', SubmitType::class, array(
-            'label' => 'kuma_social.forms.instagram.save',
-        ));
     }
 
     /**
@@ -98,6 +94,6 @@ class InstagramAuthenticationType extends AbstractType
      */
     public function getName()
     {
-        return 'instagram_authentication';
+        return 'InstagramAuthenticationType';
     }
 }

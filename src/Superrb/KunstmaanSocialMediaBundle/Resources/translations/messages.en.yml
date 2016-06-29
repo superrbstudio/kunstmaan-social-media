@@ -1,3 +1,9 @@
+# Social Types
+instagram: Instagram
+tumblr: Tumblr
+twitter: Twitter
+vimeo: Vimeo
+
 # Forms
 kuma_social:
     settings:
@@ -7,13 +13,20 @@ kuma_social:
         active_api_hashtag: Active (Custom Posts and Hashtag Search Posts)
 
     forms:
+        social:
+            type: Post Type
+            username: Username
+            date_posted: Date Posted
+            link: Link
+            custom_image: Custom Image
+            approved: Approved
+            instagram_caption: Instagram Caption
         instagram:
             active: Status
             app_client_id: Instagram App Client ID
             app_client_secret: Instagram App Client Secret
             hashtag: "Feed Hashtag (exclude the # from the front)"
             profile_url: Profile URL
-            save: Update Instagram Details
             messages:
                 access_token_error: Unable to generate Access Token:
                 access_token_success: Access Token Generated

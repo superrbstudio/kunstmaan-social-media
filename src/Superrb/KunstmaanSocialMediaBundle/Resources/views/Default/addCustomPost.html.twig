@@ -1,0 +1,17 @@
+{% extends '@KunstmaanAdminList/Default/add_or_edit.html.twig' %}
+{% form_theme form '@KunstmaanAdmin/Form/fields.html.twig' %}
+
+{% block breadcrumb %}
+    <ul class="breadcrumb app__content__breadcrumb">
+        <li><a href="{{ path('superrbkunstmaansocialmediabundle_admin_social') }}">Social Media</a></li>
+        <li class="active">Add New Custom Social Media Post</li>
+    </ul>
+{% endblock %}
+
+{% block admin_page_title %}
+    <div class="col-sm-6 col-md-8">
+        <h1 class="app__content__header__title">
+            Add New Custom Social Media Post
+        </h1>
+    </div>
+{% endblock %}

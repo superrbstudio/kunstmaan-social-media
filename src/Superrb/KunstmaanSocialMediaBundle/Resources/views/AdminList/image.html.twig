@@ -1,3 +1,7 @@
 {% if object is not null %}
-    <img src="{{ object }}" title="Instagram Image" height="75" />
+    {% if object starts with 'http' %}
+        <img src="{{ object }}" title="Image" height="75" />
+    {% else %}
+        <img src="{{ object|imagine_filter('list_image') }}" title="Image" height="75" />
+    {% endif %}
 {% endif %}
