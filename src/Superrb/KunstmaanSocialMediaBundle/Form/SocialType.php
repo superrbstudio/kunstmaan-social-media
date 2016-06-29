@@ -88,8 +88,8 @@ class SocialType extends AbstractType
             'pattern' => 'KunstmaanMediaBundle_chooser',
             'mediatype' => 'image',
             'constraints' => array(new Assert\Media(array(
-                'minHeight' => '750',
-                'minWidth' => '750',
+                'minHeight' => '640',
+                'minWidth' => '640',
                 'groups' => array('default'),
             ))),
             'required' => true,
