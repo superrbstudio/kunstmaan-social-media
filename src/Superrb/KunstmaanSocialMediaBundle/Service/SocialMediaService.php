@@ -76,13 +76,13 @@ class SocialMediaService
             $types['twitter'] = 'twitter';
         }
 
-        if($this->getUseTumblr()) {
-            $types['tumblr'] = 'tumblr';
-        }
-
-        if($this->getUseVimeo()) {
-            $types['vimeo'] = 'vimeo';
-        }
+//        if($this->getUseTumblr()) {
+//            $types['tumblr'] = 'tumblr';
+//        }
+//
+//        if($this->getUseVimeo()) {
+//            $types['vimeo'] = 'vimeo';
+//        }
 
         return $types;
     }
