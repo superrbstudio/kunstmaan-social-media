@@ -20,7 +20,7 @@ class Social extends AbstractEntity
     static $availableTypes = array(
         'instagram' => 'instagram',
         //'tumblr' => 'tumblr',
-        //'twitter' => 'twitter',
+        'twitter' => 'twitter',
         //'vimeo' => 'vimeo',
     );
 

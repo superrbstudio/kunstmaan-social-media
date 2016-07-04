@@ -30,6 +30,17 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
     );
 
     /**
+     * Options for Twitter Settings
+     * @var array
+     */
+    static $twitterSettings = array(
+        'kuma_social.settings.disabled' => 'kuma_social.settings.disabled',
+        'kuma_social.settings.active_no_api' => 'kuma_social.settings.active_no_api',
+        'kuma_social.settings.active_api_feed' => 'kuma_social.settings.active_api_feed',
+        'kuma_social.settings.active_api_hashtag' => 'kuma_social.settings.active_api_hashtag',
+    );
+
+    /**
      * @var string
      *
      * @ORM\Column(name="social_type", type="string", length=255, unique=true)
@@ -61,9 +72,31 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
 
         if(array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_no_api') {
             $groups = array('active');
-        } elseif (array_key_exists('active', $data) and$data['active'] == 'kuma_social.settings.active_api_feed') {
+        } elseif (array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_api_feed') {
             $groups = array('active', 'api');
-        } elseif (array_key_exists('active', $data) and$data['active'] == 'kuma_social.settings.active_api_hashtag') {
+        } elseif (array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_api_hashtag') {
+            $groups = array('active', 'api', 'hashtag');
+        } else {
+            $groups = array('disabled');
+        }
+
+        return $groups;
+    }
+
+    /**
+     * Determine the validation groups for Twitter settings
+     *
+     * @param FormInterface $form
+     * @return array
+     */
+    static function determineTwitterValidationGroups(FormInterface $form) {
+        $data = $form->getData();
+
+        if(array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_no_api') {
+            $groups = array('active');
+        } elseif (array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_api_feed') {
+            $groups = array('active', 'api');
+        } elseif (array_key_exists('active', $data) and $data['active'] == 'kuma_social.settings.active_api_hashtag') {
             $groups = array('active', 'api', 'hashtag');
         } else {
             $groups = array('disabled');
@@ -232,46 +265,26 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
             break;
 
             case 'twitter':
-                if($this->getSetting('access_token') and $this->getSetting('user_or_hashtag') and ($this->getSetting('username') or $this->getSetting('hashtag')))
+
+                if($this->getSetting('access_token'))
                 {
                     try
                     {
                         $client = new Client(array('base_uri' => 'https://api.twitter.com'));
 
-                        if($this->getSetting('user_or_hashtag') == 'Username' and $this->getSetting('username'))
+                        $response = $client->get('/1.1/statuses/user_timeline.json', array(
+                            'headers' => array(
+                                'Authorization' => 'Bearer ' . $this->getSetting('access_token'),
+                            ),
+                            'query' => array(
+                                'count' => 50,
+                                'screen_name' => $this->getTwitterUsername(),
+                            )
+                        ));
+
+                        if($response->getStatusCode() == 200)
                         {
-                            $response = $client->get('/1.1/statuses/user_timeline.json', array(
-                                'headers' => array(
-                                    'Authorization' => 'Bearer ' . $this->getSetting('access_token'),
-                                ),
-                                'query' => array(
-                                    'count' => 50,
-                                    'screen_name' => $this->getSetting('username'),
-                                )
-                            ));
-
-                            if($response->getStatusCode() == 200)
-                            {
-                                $success = true;
-                            }
-                        }
-
-                        if($this->getSetting('user_or_hashtag') == 'Hashtag' and $this->getSetting('hashtag'))
-                        {
-                            $response = $client->get('/1.1/search/tweets.json', array(
-                                'headers' => array(
-                                    'Authorization' => 'Bearer ' . $this->getSetting('access_token'),
-                                ),
-                                'query' => array(
-                                    'count' => 50,
-                                    'q' => '#' . $this->getSetting('hashtag'),
-                                )
-                            ));
-
-                            if($response->getStatusCode() == 200)
-                            {
-                                $success = true;
-                            }
+                            $success = true;
                         }
                     }
                     catch (\Exception $e)
@@ -353,8 +366,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                 break;
 
             case 'twitter':
-                if($this->getSetting('active') == 'active')
-                {
+                if(in_array($this->getSetting('active'), array('kuma_social.settings.active_no_api', 'kuma_social.settings.active_api_feed', 'kuma_social.settings.active_api_hashtag'))) {
                     $success = true;
                 }
                 break;
@@ -394,8 +406,7 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
                 break;
 
             case 'twitter':
-                if($this->getSetting('active') == 'active')
-                {
+                if(in_array($this->getSetting('active'), array('kuma_social.settings.active_api_feed', 'kuma_social.settings.active_api_hashtag'))) {
                     $success = true;
                 }
                 break;
@@ -409,5 +420,24 @@ class Setting extends \Kunstmaan\AdminBundle\Entity\AbstractEntity
         }
 
         return $success;
+    }
+
+    /**
+     * Get the Twitter Screen Name from the Profile URL
+     * 
+     * @return mixed
+     */
+    public function getTwitterUsername() {
+        // get the screen name
+        $profileUrl = $this->getSetting('profile_url');
+
+        if(substr($profileUrl, -1, 1) == '/') {
+            $profileUrl = substr_replace($profileUrl, '', '-1', 1);
+        }
+
+        $parts = explode('/', $profileUrl);
+        $screenName = $parts[count($parts) - 1];
+
+        return $screenName;
     }
 }

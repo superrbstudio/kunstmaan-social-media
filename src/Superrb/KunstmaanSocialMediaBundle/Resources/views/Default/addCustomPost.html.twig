@@ -15,3 +15,55 @@
         </h1>
     </div>
 {% endblock %}
+
+{% block content %}
+    <!-- Fields -->
+    <fieldset class="form__fieldset--padded">
+        {{ form_row(form.type) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.datePosted) }}
+        {{ form_row(form.link) }}
+        {{ form_row(form.customImage) }}
+
+        <div id="instagram-options">
+            {{ form_row(form.instagramCaption) }}
+        </div>
+
+        <div id="twitter-options">
+            {{ form_row(form.twitterContent) }}
+        </div>
+
+        {{ form_row(form.approved) }}
+
+    </fieldset>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block extrajavascript %}
+
+    <script>
+        $('document').ready(function() {
+            var kumaSocialActive = $('#{{ form.vars.name }}_type');
+
+            function kumaSocialInstagramForm() {
+                if(kumaSocialActive.find(":selected").val() == 'twitter'){
+                    $('#instagram-options').css('display', 'none');
+                    $('#twitter-options').css('display', 'block');
+                    $('#{{ form.vars.name }}_instagramCaption').attr('required', null);
+                    $('#{{ form.vars.name }}_twitterContent').attr('required', 'required');
+                } else {
+                    $('#instagram-options').css('display', 'block');
+                    $('#twitter-options').css('display', 'none');
+                    $('#{{ form.vars.name }}_instagramCaption').attr('required', 'required');
+                    $('#{{ form.vars.name }}_twitterContent').attr('required', null);;
+                }
+            }
+
+            kumaSocialInstagramForm();
+            kumaSocialActive.on('change', function() {
+                kumaSocialInstagramForm();
+            });
+        });
+    </script>
+
+{% endblock %}

@@ -21,6 +21,7 @@ kuma_social:
             custom_image: Custom Image
             approved: Approved
             instagram_caption: Instagram Caption
+            twitter_content: Twitter Content
         instagram:
             active: Status
             app_client_id: Instagram App Client ID
@@ -32,3 +33,15 @@ kuma_social:
                 access_token_success: Access Token Generated
                 settings_updated: Instagram Settings Updated
                 logged_in: You are logged in as
+        twitter:
+            active: Status
+            consumer_key: Twitter App Consumer Key
+            consumer_secret: Twitter App Consumer Secret
+            hashtag: "Feed Hashtag (exclude the # from the front)"
+            profile_url: Profile URL
+            messages:
+                access_token_error: Unable to generate Access Token:
+                access_token_success: Access Token Generated
+                settings_updated: Twitter Settings Updated
+                logged_in: You are logged in as
+

@@ -8,9 +8,16 @@ kuma_social:
             link: Please enter the link
             link_invalid: Please enter a valid link
             instagram_caption: Please enter the Instagram Caption
+            twitter_content: Please enter the Twitter Content
         instagram:
             client_id: Please enter a Client ID,
             client_secret: Please enter a Client Secret
+            hashtag: "Please enter a hashtag (exclude the # from the front)"
+            profile_url: Please enter the profile URL
+            profile_url_invalid: Please enter a valid URL
+        twitter:
+            consumer_key: Please enter a Consumer Key,
+            consumer_secret: Please enter a Consumer Secret
             hashtag: "Please enter a hashtag (exclude the # from the front)"
             profile_url: Please enter the profile URL
             profile_url_invalid: Please enter a valid URL

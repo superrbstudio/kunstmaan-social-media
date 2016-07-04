@@ -290,6 +290,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
     protected function updateTwitter(InputInterface $input, OutputInterface $output, Setting $settings)
     {
         $doctrine = $this->getContainer()->get('doctrine');
+        $logger = $this->getContainer()->get('logger');
         $output->writeln('Updating Twitter');
 
         try
@@ -297,21 +298,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             $twitter = new Client(array('base_uri' => 'https://api.twitter.com'));
             $response = null;
 
-            if($settings->getSetting('user_or_hashtag') == 'Username' and $settings->getSetting('username'))
-            {
-                $response = $twitter->get('/1.1/statuses/user_timeline.json', array(
-                    'headers' => array(
-                        'Authorization' => 'Bearer ' . $settings->getSetting('access_token'),
-                    ),
-                    'query' => array(
-                        'count' => 50,
-                        'screen_name' => $settings->getSetting('username'),
-                    )
-                ));
-            }
-
-            if($settings->getSetting('user_or_hashtag') == 'Hashtag' and $settings->getSetting('hashtag'))
-            {
+            if($settings->getSetting('active') == 'kuma_social.settings.active_api_hashtag') {
                 $response = $twitter->get('/1.1/search/tweets.json', array(
                     'headers' => array(
                         'Authorization' => 'Bearer ' . $settings->getSetting('access_token'),
@@ -319,6 +306,16 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     'query' => array(
                         'count' => 50,
                         'q' => '#' . $settings->getSetting('hashtag'),
+                    )
+                ));
+            } else {
+                $response = $twitter->get('/1.1/statuses/user_timeline.json', array(
+                    'headers' => array(
+                        'Authorization' => 'Bearer ' . $settings->getSetting('access_token'),
+                    ),
+                    'query' => array(
+                        'count' => 50,
+                        'screen_name' => $settings->getTwitterUsername(),
                     )
                 ));
             }
@@ -378,11 +375,13 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
             }
             else
             {
+                $logger->error('Unable to update Twitter: ' . $response->getStatusCode() . ' response code given');
                 $output->writeln('<error>Unable to update Twitter: ' . $response->getStatusCode() . ' response code given</error>');
             }
         }
         catch (\Exception $e)
         {
+            $logger->error('Unable to update Twitter: ' . $e->getMessage());
             $output->writeln('<error>Unable to update Twitter: ' . $e->getMessage() . '</error>');
         }
     }

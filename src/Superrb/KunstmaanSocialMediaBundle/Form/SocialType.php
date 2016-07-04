@@ -105,6 +105,16 @@ class SocialType extends AbstractType
             ),
         ));
 
+        $builder->add('twitterContent', TextType::class, array(
+            'label' => 'kuma_social.forms.social.twitter_content',
+            'constraints' => array(
+                new NotBlank(array(
+                    'message' => 'kuma_social.forms.social.twitter_content',
+                    'groups' => array('twitter'),
+                )),
+            ),
+        ));
+
         $builder->add('approved');
     }
 

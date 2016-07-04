@@ -221,7 +221,7 @@ class SocialAdminListController extends AdminListController
                 $this->getDoctrine()->getManager()->flush();
 
                 // We don't have a valid access token so try to get one
-                if(!$settings->getIsAuthenticated()) {
+                if(!$settings->getIsAuthenticated() and $settings->getIsApiActive()) {
                     return $this->redirect('https://api.instagram.com/oauth/authorize/?client_id=' . $settings->getSetting('client_id') . '&redirect_uri=' . $redirectUrl . '&response_type=code');
                 } else {
                     $this->addFlash('success', $this->get('translator')->trans('kuma_social.forms.instagram.messages.settings_updated'));
@@ -310,38 +310,35 @@ class SocialAdminListController extends AdminListController
     public function authenticateTwitterAction(Request $request)
     {
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
-        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), true);
 
         $formData = array(
             'active' => $settings->getSetting('active')
         );
 
-        if($settings->getSetting('consumer_key') and $settings->getSetting('consumer_secret'))
-        {
+        if($settings->getSetting('consumer_key')) {
             $formData['consumer_key'] = $settings->getSetting('consumer_key');
+        }
+
+        if($settings->getSetting('consumer_secret')) {
             $formData['consumer_secret'] = $settings->getSetting('consumer_secret');
-
-            if($settings->getSetting('user_or_hashtag'))
-            {
-                $formData['user_or_hashtag'] = $settings->getSetting('user_or_hashtag');
-            }
-
-            if($settings->getSetting('username'))
-            {
-                $formData['username'] = $settings->getSetting('username');
-            }
-
-            if($settings->getSetting('hashtag'))
-            {
-                $formData['hashtag'] = $settings->getSetting('hashtag');
-            }
-
-            $form = $this->createForm(new TwitterAuthenticationType(), $formData);
         }
-        else
-        {
-            $form = $this->createForm(new TwitterAuthenticationType());
+
+
+        if($settings->getSetting('hashtag')) {
+            $formData['hashtag'] = $settings->getSetting('hashtag');
         }
+
+        if($settings->getSetting('profile_url')) {
+            $formData['profile_url'] = $settings->getSetting('profile_url');
+        }
+
+        $form = $this->createForm(new TwitterAuthenticationType(), $formData, array(
+            'method' => 'POST',
+            'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter'),
+            'attr' => array(
+                'novalidate' => 'novalidate',
+            ),
+        ));
 
         // form has been submitted validate and redirect to twitter
         if($request->getMethod() == 'POST')
@@ -353,10 +350,8 @@ class SocialAdminListController extends AdminListController
                 $settings->setSetting('active', $form['active']->getData());
                 $settings->setSetting('consumer_key', $form['consumer_key']->getData());
                 $settings->setSetting('consumer_secret', $form['consumer_secret']->getData());
-                $settings->setSetting('user_or_hashtag', $form['user_or_hashtag']->getData());
-                $settings->setSetting('username', $form['username']->getData());
                 $settings->setSetting('hashtag', $form['hashtag']->getData());
-                $settings->setSetting('redirect_url', $redirectUrl);
+                $settings->setSetting('profile_url', $form['profile_url']->getData());
 
                 // create the bearer token credentials
                 $consumerKey = urlencode($settings->getSetting('consumer_key'));
@@ -364,42 +359,50 @@ class SocialAdminListController extends AdminListController
                 $bearerTokenCredentials = base64_encode($consumerKey . ":" . $consumerSecret);
                 $settings->setSetting('bearer_token_credentials', $bearerTokenCredentials);
 
-                // attempt to get bearer token
-                try
-                {
-                    $client = new Client(array('base_uri' => 'https://api.twitter.com'));
-                    $response = $client->post(
-                        '/oauth2/token',
-                        array(
-                            'headers' => array(
-                                'Content-Type' => 'application/x-www-form-urlencoded;charset=UTF-8',
-                                'Authorization' => 'Basic ' . $settings->getSetting('bearer_token_credentials')
-                            ),
-                            'body' => 'grant_type=client_credentials',
-                        )
-                    );
+                // attempt to get bearer token if required
+                if(!$settings->getIsAuthenticated() and $settings->getIsApiActive()) {
+                    try {
+                        $client = new Client(array('base_uri' => 'https://api.twitter.com'));
+                        $response = $client->post(
+                            '/oauth2/token',
+                            array(
+                                'headers' => array(
+                                    'Content-Type' => 'application/x-www-form-urlencoded;charset=UTF-8',
+                                    'Authorization' => 'Basic ' . $settings->getSetting('bearer_token_credentials')
+                                ),
+                                'body' => 'grant_type=client_credentials',
+                            )
+                        );
 
-                    if($response->getStatusCode() == 200)
-                    {
-                        $data = json_decode($response->getBody()->getContents());
-                        $settings->setSetting('token_type', $data->token_type);
-                        $settings->setSetting('access_token', $data->access_token);
+                        if ($response->getStatusCode() == 200) {
+                            $data = json_decode($response->getBody()->getContents());
+                            $settings->setSetting('token_type', $data->token_type);
+                            $settings->setSetting('access_token', $data->access_token);
+                        }
+                    } catch (\Exception $e) {
+                        // we have returned from instagram with an error
+                        $logger = $this->get('logger');
+                        $logger->error('Unable to update Twitter: ' . $e->getMessage());
+
+                        $settings->setSetting('active', 'kuma_social.settings.active_no_api');
+                        $this->getDoctrine()->getManager()->persist($settings);
+                        $this->getDoctrine()->getManager()->flush();
+
+                        $this->addFlash('error', $this->get('translator')->trans('kuma_social.forms.twitter.messages.access_token_error') . $e->getMessage());
+                        return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter'));
                     }
-                }
-                catch (\Exception $e)
-                {
-                    var_dump('<error>Unable to update Twitter: ' . $e->getMessage() . '</error>');
                 }
 
                 // save everything
                 $this->getDoctrine()->getManager()->persist($settings);
                 $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', $this->get('translator')->trans('kuma_social.forms.twitter.messages.settings_updated'));
+                return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter'));
             }
         }
 
         return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateTwitter.html.twig', array(
             'form' => $form->createView(),
-            'redirectUrl' => $redirectUrl,
             'settings' => $settings,
             'isAuthenticated' => $settings->getIsAuthenticated(),
         ));

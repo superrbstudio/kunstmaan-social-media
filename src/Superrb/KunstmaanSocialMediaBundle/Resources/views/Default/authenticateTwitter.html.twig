@@ -1,19 +1,113 @@
 {% extends 'KunstmaanAdminBundle:Default:layout.html.twig' %}
 {% form_theme form 'KunstmaanAdminBundle:Form:fields.html.twig' %}
 
+{% block header %}
+    {{ form_start(form) }}
+    {{ parent() }}
+{% endblock %}
+
+{% block extra_actions_header %}
+    <div class="col-sm-6 col-md-4">
+        <!-- Main-actions -->
+        <div class="js-auto-collapse-buttons page-main-actions page-main-actions--no-tabs page-main-actions--inside-extra-actions-header">
+            <div class="btn-group">
+                {% block actions %}
+                    <button type="submit" class="btn btn-primary btn--raise-on-hover">
+                        {{ 'Save' | trans }}
+                    </button>
+                    <a href="{{ path('superrbkunstmaansocialmediabundle_admin_social') }}" class="btn btn-default btn--raise-on-hover">
+                        {{ 'form.cancel' | trans }}
+                    </a>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Scroll-actions -->
+    <div class="page-main-actions page-main-actions--top" id="page-main-actions-top">
+        <div class="btn-group">
+            {{ block('actions') }}
+            <button type="button" class="js-scroll-to-top btn btn-default btn--raise-on-hover">
+                <i class="fa fa-caret-up"></i>
+            </button>
+        </div>
+    </div>
+{% endblock %}
+
 {% block content %}
-    <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter') }}" method="post" {{ form_enctype(form) }}>
-        <fieldset class="form__fieldset--padded">
+    <fieldset class="form__fieldset--padded">
 
-            {% if isAuthenticated %}
-                <p>Your account is currently <strong>authenticated</strong> and <strong>logged in</strong>.</p>
-            {% else %}
-                <p>Use this page to generate an access token to allow this website access to Twitter.</p>
-                <p>You will need to set up the Twitter App. Apps can be set up at <a href="https://apps.twitter.com" target="_blank">https://apps.twitter.com</a></p>
-            {% endif %}
+        {% if isAuthenticated %}
+            <p>Your account is currently <strong>authenticated</strong> and <strong>logged in</strong>.</p>
+        {% else %}
+            <p>Use this page to generate an access token to allow this website access to Twitter.</p>
+            <p>You will need to set up the Twitter App. Apps can be set up at <a href="https://apps.twitter.com" target="_blank">https://apps.twitter.com</a></p>
+        {% endif %}
 
-            {{ form_widget(form) }}
-            <input type="submit" value="{% if isAuthenticated %}Update Twitter Details{% else %}Log in to Twitter{% endif %}">
-        </fieldset>
-    </form>
+        {{ form_row(form.active) }}
+
+        <div id="kuma-social-app-details">
+            {{ form_row(form.consumer_key) }}
+            {{ form_row(form.consumer_secret) }}
+        </div>
+        <div id="kuma-social-hashtag">
+            {{ form_row(form.hashtag) }}
+        </div>
+        <div id="kuma-social-profile-url">
+            {{ form_row(form.profile_url) }}
+        </div>
+
+    </fieldset>
+    {{ form_end(form) }}
 {% endblock content %}
+
+{% block extrajavascript %}
+
+    <script>
+        $('document').ready(function() {
+            var kumaSocialActive = $('#{{ form.vars.name }}_active');
+
+            function kumaSocialInstagramForm() {
+                if(kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_no_api'){
+                    $('#kuma-social-app-details').css('display', 'none');
+                    $('#kuma-social-hashtag').css('display', 'none');
+                    $('#kuma-social-profile-url').css('display', 'block');
+                    $('#{{ form.vars.name }}_consumer_key').attr('required', null);
+                    $('#{{ form.vars.name }}_consumer_secret').attr('required', null);
+                    $('#{{ form.vars.name }}_hashtag').attr('required', null);
+                    $('#{{ form.vars.name }}_profile_url').attr('required', 'required');
+                } else if (kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_api_feed') {
+                    $('#kuma-social-app-details').css('display', 'block');
+                    $('#kuma-social-hashtag').css('display', 'none');
+                    $('#kuma-social-profile-url').css('display', 'block');
+                    $('#{{ form.vars.name }}_consumer_key').attr('required', 'required');
+                    $('#{{ form.vars.name }}_consumer_secret').attr('required', 'required');
+                    $('#{{ form.vars.name }}_hashtag').attr('required', null);
+                    $('#{{ form.vars.name }}_profile_url').attr('required', 'required');
+                } else if (kumaSocialActive.find(":selected").val() == 'kuma_social.settings.active_api_hashtag') {
+                    $('#kuma-social-app-details').css('display', 'block');
+                    $('#kuma-social-hashtag').css('display', 'block');
+                    $('#kuma-social-profile-url').css('display', 'block');
+                    $('#{{ form.vars.name }}_consumer_key').attr('required', 'required');
+                    $('#{{ form.vars.name }}_consumer_secret').attr('required', 'required');
+                    $('#{{ form.vars.name }}_hashtag').attr('required', 'required');
+                    $('#{{ form.vars.name }}_profile_url').attr('required', 'required');
+                } else {
+                    $('#kuma-social-app-details').css('display', 'none');
+                    $('#kuma-social-hashtag').css('display', 'none');
+                    $('#kuma-social-profile-url').css('display', 'none');
+                    $('#{{ form.vars.name }}_consumer_key').attr('required', null);
+                    $('#{{ form.vars.name }}_consumer_secret').attr('required', null);
+                    $('#{{ form.vars.name }}_hashtag').attr('required', '');
+                    $('#{{ form.vars.name }}_profile_url').attr('required', null);
+                }
+            }
+
+            kumaSocialInstagramForm();
+            kumaSocialActive.on('change', function() {
+                kumaSocialInstagramForm();
+            });
+        });
+    </script>
+
+{% endblock %}
