@@ -75,6 +75,20 @@ stof_doctrine_extensions:
             timestampable: true
 ```
 
+### Step 6: Add required parameters
+
+Add these parameters to you `app/config/parameters.yml` and `app/config/parameters.yml.dist` if you use it.
+
+Set them to `true` or `false` to turn on or off each feed.
+
+```yml
+parameters:
+    sb_social_media.instagram:  true
+    sb_social_media.twitter:    true
+    sb_social_media.tumblr:     true
+    sb_social_media.vimeo:      true
+```
+
 ## Usage
 
 ### Generating an Instagram Access Token
