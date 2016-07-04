@@ -22,6 +22,8 @@ kuma_social:
             approved: Approved
             instagram_caption: Instagram Caption
             twitter_content: Twitter Content
+            messages:
+                add_success: New Social Media Post Added Successfully
         instagram:
             active: Status
             app_client_id: Instagram App Client ID

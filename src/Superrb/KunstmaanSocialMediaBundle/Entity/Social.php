@@ -17,13 +17,6 @@ use Symfony\Component\Form\FormInterface;
  */
 class Social extends AbstractEntity
 {
-    static $availableTypes = array(
-        'instagram' => 'instagram',
-        //'tumblr' => 'tumblr',
-        'twitter' => 'twitter',
-        //'vimeo' => 'vimeo',
-    );
-
     /**
      * @var datetime $created
      *

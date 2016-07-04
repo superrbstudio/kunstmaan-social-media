@@ -7,8 +7,13 @@ services:
             - "%sb_social_media.twitter%"
             - "%sb_social_media.tumblr%"
             - "%sb_social_media.vimeo%"
+    sb_social_media_custom_form:
+        class: Superrb\KunstmaanSocialMediaBundle\Form\SocialAddType
+        arguments:
+            - '@sb_social_media'
     SuperrbKunstmaanSocialMediaBundle.menu.adaptor.modules:
         class: Superrb\KunstmaanSocialMediaBundle\Helper\Menu\ModulesMenuAdaptor
         tags:
             -  { name: 'kunstmaan_admin.menu.adaptor' }
-        arguments: ['@sb_social_media']
+        arguments:
+            - '@sb_social_media'

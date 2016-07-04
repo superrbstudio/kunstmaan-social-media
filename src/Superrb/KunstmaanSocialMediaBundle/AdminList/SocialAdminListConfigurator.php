@@ -46,7 +46,6 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     public function __construct(EntityManager $em, AclHelper $aclHelper = null)
     {
         parent::__construct($em, $aclHelper);
-        $this->setAdminType(new SocialAdminType());
     }
 
     /**

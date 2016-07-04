@@ -8,6 +8,7 @@ use Kunstmaan\AdminListBundle\AdminList\Configurator\AdminListConfiguratorInterf
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Superrb\KunstmaanSocialMediaBundle\Entity\Social;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Superrb\KunstmaanSocialMediaBundle\Form\InstagramAuthenticationType;
@@ -20,6 +21,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Superrb\KunstmaanSocialMediaBundle\Form\SocialAddType;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * The admin list controller for Social
@@ -72,10 +74,28 @@ class SocialAdminListController extends AdminListController
      */
     public function addAction(Request $request)
     {
-        $adminListConfigurator = $this->getAdminListConfigurator();
-        $adminListConfigurator->setAdminType(new SocialAddType());
-        
-        return parent::doAddAction($adminListConfigurator, null, $request);
+        $social = new Social();
+
+        $form = $this->createForm($this->get('sb_social_media_custom_form'), $social, array(
+            'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_add'),
+            'method' => 'POST',
+        ));
+
+        if($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+
+            if($form->isValid()) {
+                $this->getDoctrine()->getManager()->persist($social);
+                $this->getDoctrine()->getManager()->flush();
+                $this->addFlash('success', $this->get('translator')->trans('kuma_social.forms.social.messages.add_success'));
+                return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social'));
+            }
+        }
+
+        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:addCustomPost.html.twig', array(
+            'form' => $form->createView(),
+            'adminlistconfigurator' => $this->getAdminListConfigurator(),
+        ));
     }
 
     /**
@@ -129,6 +149,10 @@ class SocialAdminListController extends AdminListController
      */
     public function authenticateInstagramAction(Request $request)
     {
+        if(!$this->get('sb_social_media')->getUseInstagram()) {
+            throw new NotFoundHttpException('Instagram is not enabled');
+        }
+
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), true);
 
@@ -246,6 +270,10 @@ class SocialAdminListController extends AdminListController
      */
     public function authenticateTumblrAction(Request $request)
     {
+        if(!$this->get('sb_social_media')->getUseTumblr()) {
+            throw new NotFoundHttpException('Tumblr is not enabled');
+        }
+
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), true);
 
@@ -309,6 +337,10 @@ class SocialAdminListController extends AdminListController
      */
     public function authenticateTwitterAction(Request $request)
     {
+        if(!$this->get('sb_social_media')->getUseTwitter()) {
+            throw new NotFoundHttpException('Twitter is not enabled');
+        }
+
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
 
         $formData = array(
@@ -414,6 +446,10 @@ class SocialAdminListController extends AdminListController
      */
     public function authenticateVimeoAction(Request $request)
     {
+        if(!$this->get('sb_social_media')->getUseVimeo()) {
+            throw new NotFoundHttpException('Vimeo is not enabled');
+        }
+
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo', array(), true);
 

@@ -64,4 +64,26 @@ class SocialMediaService
     public function getUseVimeo() {
         return $this->useVimeo;
     }
+
+    public function getAvailableTypes() {
+        $types = array();
+
+        if($this->getUseInstagram()) {
+            $types['instagram'] = 'instagram';
+        }
+
+        if($this->getUseTwitter()) {
+            $types['twitter'] = 'twitter';
+        }
+
+        if($this->getUseTumblr()) {
+            $types['tumblr'] = 'tumblr';
+        }
+
+        if($this->getUseVimeo()) {
+            $types['vimeo'] = 'vimeo';
+        }
+
+        return $types;
+    }
 }

@@ -3,6 +3,7 @@
 namespace Superrb\KunstmaanSocialMediaBundle\Form;
 
 use Superrb\KunstmaanSocialMediaBundle\Entity\Social;
+use Superrb\KunstmaanSocialMediaBundle\Service\SocialMediaService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -18,6 +19,17 @@ use Symfony\Component\Validator\Constraints\Url;
 
 class SocialType extends AbstractType
 {
+    protected $socialMediaService;
+
+    /**
+     * SocialType constructor.
+     * @param SocialMediaService $socialMediaService
+     */
+    public function __construct(SocialMediaService $socialMediaService)
+    {
+        $this->socialMediaService = $socialMediaService;
+    }
+
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'class' => Social::class,
@@ -30,7 +42,7 @@ class SocialType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('type', ChoiceType::class, array(
-            'choices' => Social::$availableTypes,
+            'choices' => $this->socialMediaService->getAvailableTypes(),
             'label' => 'kuma_social.forms.social.type',
             'choices_as_values' => true,
             'constraints' => array(
