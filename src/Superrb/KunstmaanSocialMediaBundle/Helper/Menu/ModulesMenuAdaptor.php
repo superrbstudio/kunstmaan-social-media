@@ -5,10 +5,17 @@ use Kunstmaan\AdminBundle\Helper\Menu\MenuAdaptorInterface;
 use Kunstmaan\AdminBundle\Helper\Menu\MenuBuilder;
 use Kunstmaan\AdminBundle\Helper\Menu\MenuItem;
 use Kunstmaan\AdminBundle\Helper\Menu\TopMenuItem;
+use Superrb\KunstmaanSocialMediaBundle\Service\SocialMediaService;
 use Symfony\Component\HttpFoundation\Request;
 
 class ModulesMenuAdaptor implements MenuAdaptorInterface
 {
+    protected $socialMediaService;
+
+    public function __construct(SocialMediaService $socialMediaService)
+    {
+        $this->socialMediaService = $socialMediaService;
+    }
 
     /**
      * {@inheritDoc}
@@ -43,59 +50,67 @@ class ModulesMenuAdaptor implements MenuAdaptorInterface
             }
             $children[] = $menuItem;
 
-            // Instagram Settings
-            $menuItem = new TopMenuItem($menu);
-            $menuItem
-                ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram')
-                ->setLabel('Instagram Settings')
-                ->setUniqueId('Instagram Settings')
-                ->setParent($parent);
-            if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
-                $menuItem->setActive(true);
-                $parent->setActive(true);
+            if($this->socialMediaService->getUseInstagram()) {
+                // Instagram Settings
+                $menuItem = new TopMenuItem($menu);
+                $menuItem
+                    ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram')
+                    ->setLabel('Instagram Settings')
+                    ->setUniqueId('Instagram Settings')
+                    ->setParent($parent);
+                if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
+                    $menuItem->setActive(true);
+                    $parent->setActive(true);
+                }
+                $children[] = $menuItem;   
             }
-            $children[] = $menuItem;
 
-            // Tumblr Settings
-            $menuItem = new TopMenuItem($menu);
-            $menuItem
-                ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr')
-                ->setLabel('Tumblr Settings')
-                ->setUniqueId('Tumblr Settings')
-                ->setParent($parent);
-            if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
-                $menuItem->setActive(true);
-                $parent->setActive(true);
+            if($this->socialMediaService->getUseTwitter()) {
+                // Twitter Settings
+                $menuItem = new TopMenuItem($menu);
+                $menuItem
+                    ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter')
+                    ->setLabel('Twitter Settings')
+                    ->setUniqueId('Twitter Settings')
+                    ->setParent($parent);
+                if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
+                    $menuItem->setActive(true);
+                    $parent->setActive(true);
+                }
+                $children[] = $menuItem;
             }
-            $children[] = $menuItem;
 
-            // Twitter Settings
-            $menuItem = new TopMenuItem($menu);
-            $menuItem
-                ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter')
-                ->setLabel('Twitter Settings')
-                ->setUniqueId('Twitter Settings')
-                ->setParent($parent);
-            if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
-                $menuItem->setActive(true);
-                $parent->setActive(true);
+            if($this->socialMediaService->getUseTumblr()){
+                // Tumblr Settings
+                $menuItem = new TopMenuItem($menu);
+                $menuItem
+                    ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr')
+                    ->setLabel('Tumblr Settings')
+                    ->setUniqueId('Tumblr Settings')
+                    ->setParent($parent);
+                if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
+                    $menuItem->setActive(true);
+                    $parent->setActive(true);
+                }
+                $children[] = $menuItem;
             }
-            $children[] = $menuItem;
 
-            // Vimeo Settings
-            $menuItem = new TopMenuItem($menu);
-            $menuItem
-                ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo')
-                ->setLabel('Vimeo Settings')
-                ->setUniqueId('Vimeo Settings')
-                ->setParent($parent);
-            if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
-                $menuItem->setActive(true);
-                $parent->setActive(true);
+            if($this->socialMediaService->getUseVimeo()) {
+                // Vimeo Settings
+                $menuItem = new TopMenuItem($menu);
+                $menuItem
+                    ->setRoute('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo')
+                    ->setLabel('Vimeo Settings')
+                    ->setUniqueId('Vimeo Settings')
+                    ->setParent($parent);
+                if (stripos($request->attributes->get('_route'), $menuItem->getRoute()) === 0) {
+                    $menuItem->setActive(true);
+                    $parent->setActive(true);
+                }
+                $children[] = $menuItem;
             }
-            $children[] = $menuItem;
 
-            // Vimeo Settings
+            // Update Feed
             $menuItem = new TopMenuItem($menu);
             $menuItem
                 ->setRoute('superrbkunstmaansocialmediabundle_admin_social_update')

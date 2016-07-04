@@ -32,43 +32,52 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $socialMediaService = $this->getContainer()->get('sb_social_media');
+
         $output->writeln('<info>Starting Social Media Feed Update</info>');
 
-        // update instagram if required
-        $instagramSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
+        if($socialMediaService->getUseInstagram()) {
+            // update instagram if required
+            $instagramSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
 
-        if($instagramSetting->getIsApiActive() and $instagramSetting->getIsAuthenticated()) {
-            $this->updateInstagram($input, $output, $instagramSetting);
-        } else {
-            $output->writeln('Instagram Disabled');
+            if ($instagramSetting->getIsApiActive() and $instagramSetting->getIsAuthenticated()) {
+                $this->updateInstagram($input, $output, $instagramSetting);
+            } else {
+                $output->writeln('Instagram Disabled');
+            }
         }
 
-        // update tumblr if required
-        $tumblrSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
+        if($socialMediaService->getUseTumblr()) {
+            // update tumblr if required
+            $tumblrSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
 
-        if($tumblrSetting->getIsApiActive() and $tumblrSetting->getIsAuthenticated()) {
-            $this->updateTumblr($input, $output, $tumblrSetting);
-        } else {
-            $output->writeln('Tumblr Disabled');
+            if($tumblrSetting->getIsApiActive() and $tumblrSetting->getIsAuthenticated()) {
+                $this->updateTumblr($input, $output, $tumblrSetting);
+            } else {
+                $output->writeln('Tumblr Disabled');
+            }
         }
 
-        // update twitter if required
-        $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
+        if($socialMediaService->getUseTwitter()) {
+            // update twitter if required
+            $twitterSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
 
-        if($twitterSetting->getIsApiActive() and $twitterSetting->getIsAuthenticated()) {
-            $this->updateTwitter($input, $output, $twitterSetting);
-        } else {
-            $output->writeln('Twitter Disabled');
+            if($twitterSetting->getIsApiActive() and $twitterSetting->getIsAuthenticated()) {
+                $this->updateTwitter($input, $output, $twitterSetting);
+            } else {
+                $output->writeln('Twitter Disabled');
+            }
         }
 
+        if($socialMediaService->getUseVimeo()) {
+            // update vimeo if required
+            $vimeoSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
 
-        // update vimeo if required
-        $vimeoSetting = $this->getContainer()->get('doctrine')->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
-
-        if($vimeoSetting->getIsApiActive() and $vimeoSetting->getIsAuthenticated()) {
-            $this->updateVimeo($input, $output, $vimeoSetting);
-        } else {
-            $output->writeln('Vimeo Disabled');
+            if($vimeoSetting->getIsApiActive() and $vimeoSetting->getIsAuthenticated()) {
+                $this->updateVimeo($input, $output, $vimeoSetting);
+            } else {
+                $output->writeln('Vimeo Disabled');
+            }
         }
 
         return true;
