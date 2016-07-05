@@ -15,15 +15,8 @@ class VersionChecker extends BaseVersionChecker
      */
     protected function parseComposer()
     {
-        $bundles = array();
+        $bundles = parent::parseComposer();
         foreach ($this->getPackages() as $package) {
-            if (!strncmp($package['name'], 'kunstmaan/', strlen('kunstmaan/'))) {
-                $bundles[] = array(
-                    'name' => $package['name'],
-                    'version' => $package['version'],
-                    'reference' => $package['source']['reference']
-                );
-            }
             if (!strncmp($package['name'], 'superrb/kunstmaan-social-media', strlen('superrb/kunstmaan-social-media'))) {
                 $bundles[] = array(
                     'name' => $package['name'],
