@@ -62,6 +62,10 @@ class SocialAdminListController extends AdminListController
      */
     public function indexAction(Request $request)
     {
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_USER', 'ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         return parent::doIndexAction($this->getAdminListConfigurator(), $request);
     }
 
@@ -74,6 +78,10 @@ class SocialAdminListController extends AdminListController
      */
     public function addAction(Request $request)
     {
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_USER', 'ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         $social = new Social();
 
         $form = $this->createForm($this->get('sb_social_media_custom_form'), $social, array(
@@ -151,6 +159,10 @@ class SocialAdminListController extends AdminListController
     {
         if(!$this->get('sb_social_media')->getUseInstagram()) {
             throw new NotFoundHttpException('Instagram is not enabled');
+        }
+
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
         }
 
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
@@ -274,6 +286,10 @@ class SocialAdminListController extends AdminListController
             throw new NotFoundHttpException('Tumblr is not enabled');
         }
 
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
         $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), true);
 
@@ -339,6 +355,10 @@ class SocialAdminListController extends AdminListController
     {
         if(!$this->get('sb_social_media')->getUseTwitter()) {
             throw new NotFoundHttpException('Twitter is not enabled');
+        }
+
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
         }
 
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->twitter();
@@ -448,6 +468,10 @@ class SocialAdminListController extends AdminListController
     {
         if(!$this->get('sb_social_media')->getUseVimeo()) {
             throw new NotFoundHttpException('Vimeo is not enabled');
+        }
+
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
         }
 
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
@@ -574,6 +598,10 @@ class SocialAdminListController extends AdminListController
      */
     public function updateSocialFeedAction(Request $request)
     {
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         $kernel = $this->get('kernel');
         $application = new Application($kernel);
         $application->setAutoExit(false);
@@ -598,6 +626,10 @@ class SocialAdminListController extends AdminListController
      * @return JsonResponse
      */
     public function approvePostAction(Request $request, $id = null) {
+        if (!$this->get('security.authorization_checker')->isGranted(array('ROLE_SOCIAL_USER', 'ROLE_SOCIAL_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+
         if($id) {
             $post = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->find($id);
 

@@ -20,3 +20,4 @@ services:
             -  { name: 'kunstmaan_admin.menu.adaptor' }
         arguments:
             - '@sb_social_media'
+            - '@security.authorization_checker'
