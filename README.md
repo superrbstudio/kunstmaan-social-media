@@ -91,7 +91,7 @@ parameters:
 
 ### Step 7: Create User Roles
 
-Add the required User Roles to the system with the following comman. You can then assign them to your user groups to give access.
+Add the required User Roles to the system with the following command. You can then assign them to your user groups to give access.
 
 ```bash
 app/console kuma:socialMedia:checkRoles
