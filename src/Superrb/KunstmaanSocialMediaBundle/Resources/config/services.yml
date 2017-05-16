@@ -14,6 +14,8 @@ services:
         class: Superrb\KunstmaanSocialMediaBundle\Form\SocialAddType
         arguments:
             - '@sb_social_media'
+        tags:
+            - { name: form.type, alias: 'sb_social_media_custom_form' }
     SuperrbKunstmaanSocialMediaBundle.menu.adaptor.modules:
         class: Superrb\KunstmaanSocialMediaBundle\Helper\Menu\ModulesMenuAdaptor
         tags:

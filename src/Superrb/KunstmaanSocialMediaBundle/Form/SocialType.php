@@ -97,7 +97,7 @@ class SocialType extends AbstractType
 
         $builder->add('customImage', MediaType::class, array(
             'label' => 'kuma_social.forms.social.custom_image',
-            'pattern' => 'KunstmaanMediaBundle_chooser',
+            'chooser' => 'KunstmaanMediaBundle_chooser',
             'mediatype' => 'image',
             'constraints' => array(new Assert\Media(array(
                 'minHeight' => '640',

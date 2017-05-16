@@ -86,7 +86,7 @@ class SocialAdminListController extends AdminListController
 
         $social = new Social();
 
-        $form = $this->createForm($this->get('sb_social_media_custom_form'), $social, array(
+        $form = $this->createForm(SocialAddType::class, $social, array(
             'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_add'),
             'method' => 'POST',
         ));
