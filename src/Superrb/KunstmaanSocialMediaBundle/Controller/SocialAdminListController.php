@@ -21,7 +21,9 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Superrb\KunstmaanSocialMediaBundle\Form\SocialAddType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * The admin list controller for Social
@@ -74,7 +76,7 @@ class SocialAdminListController extends AdminListController
      *
      * @Route("/add", name="superrbkunstmaansocialmediabundle_admin_social_add")
      * @Method({"GET", "POST"})
-     * @return array
+     * @return Response
      */
     public function addAction(Request $request)
     {
@@ -166,7 +168,7 @@ class SocialAdminListController extends AdminListController
         }
 
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->instagram();
-        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), true);
+        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
         $formData = array(
             'active' => $settings->getSetting('active')
@@ -189,7 +191,7 @@ class SocialAdminListController extends AdminListController
             $formData['profile_url'] = $settings->getSetting('profile_url');
         }
 
-        $form = $this->createForm(new InstagramAuthenticationType(), $formData, array(
+        $form = $this->createForm(InstagramAuthenticationType::class, $formData, array(
             'method' => 'POST',
             'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'),
             'attr' => array(
@@ -291,7 +293,7 @@ class SocialAdminListController extends AdminListController
         }
 
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->tumblr();
-        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), true);
+        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
         $formData = array(
             'active' => $settings->getSetting('active')
@@ -313,11 +315,11 @@ class SocialAdminListController extends AdminListController
             {
                 $formData['hashtag'] = $settings->getSetting('hashtag');
             }
-            $form = $this->createForm(new TumblrAuthenticationType(), $formData);
+            $form = $this->createForm(TumblrAuthenticationType::class, $formData);
 
         } else
         {
-            $form = $this->createForm(new TumblrAuthenticationType());
+            $form = $this->createForm(TumblrAuthenticationType::class);
         }
 
         if($request->getMethod() == 'POST')
@@ -384,7 +386,7 @@ class SocialAdminListController extends AdminListController
             $formData['profile_url'] = $settings->getSetting('profile_url');
         }
 
-        $form = $this->createForm(new TwitterAuthenticationType(), $formData, array(
+        $form = $this->createForm(TwitterAuthenticationType::class, $formData, array(
             'method' => 'POST',
             'action' => $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_twitter'),
             'attr' => array(
@@ -475,7 +477,7 @@ class SocialAdminListController extends AdminListController
         }
 
         $settings = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Setting')->vimeo();
-        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo', array(), true);
+        $redirectUrl = $this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_vimeo', array(), UrlGeneratorInterface::ABSOLUTE_URL);
 
         $formData = array(
             'active' => $settings->getSetting('active')
@@ -501,11 +503,11 @@ class SocialAdminListController extends AdminListController
                 $formData['hashtag'] = $settings->getSetting('hashtag');
             }
 
-            $form = $this->createForm(new VimeoAuthenticationType(), $formData);
+            $form = $this->createForm(VimeoAuthenticationType::class, $formData);
         }
         else
         {
-            $form = $this->createForm(new VimeoAuthenticationType());
+            $form = $this->createForm(VimeoAuthenticationType::class);
         }
 
         if($request->query->get('code', null) and $request->query->get('state') == $settings->getSetting('consumer_secret'))
