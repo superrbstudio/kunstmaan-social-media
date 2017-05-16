@@ -2,7 +2,7 @@
 {% form_theme form 'KunstmaanAdminBundle:Form:fields.html.twig' %}
 
 {% block content %}
-    <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr') }}" method="post" {{ form_enctype(form) }}>
+    <form action="{{ url('superrbkunstmaansocialmediabundle_admin_social_authenticate_tumblr') }}" method="POST">
         <fieldset class="form__fieldset--padded">
 
             {% if isAuthenticated %}
