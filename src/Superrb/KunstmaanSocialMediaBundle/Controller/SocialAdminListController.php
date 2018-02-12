@@ -105,6 +105,7 @@ class SocialAdminListController extends AdminListController
         return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:addCustomPost.html.twig', array(
             'form' => $form->createView(),
             'adminlistconfigurator' => $this->getAdminListConfigurator(),
+            'entityVersionLockCheck' => false
         ));
     }
 

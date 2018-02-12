@@ -44,7 +44,7 @@ Add the following to your `app/config/routes.yml`
 
 ```yml
 superrbkunstmaansocialmediabundle_social_admin_list:
-    resource: @SuperrbKunstmaanSocialMediaBundle/Controller/SocialAdminListController.php
+    resource: "@SuperrbKunstmaanSocialMediaBundle/Controller/SocialAdminListController.php"
     type:     annotation
     prefix:   /{_locale}/admin/social/
 ```
@@ -56,12 +56,12 @@ Remember to remove the `/{_locale}/` from the admin list route if you are using 
 You can use Doctrine Migrations or a schema update, it is your choice
 
 ```bash
-app/console doctrine:migrations:diff
-app/console doctrine:migrations:migrate
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:migrate
 ```
 or
 ```bash
-app/console doctrine:schema:update --force
+bin/console doctrine:schema:update --force
 ```
 
 ### Step 5: Add required config
@@ -94,7 +94,7 @@ parameters:
 Add the required User Roles to the system with the following command. You can then assign them to your user groups to give access.
 
 ```bash
-app/console kuma:socialMedia:checkRoles
+bin/console kuma:socialMedia:checkRoles
 ```
 
 ## Usage
@@ -144,7 +144,7 @@ app/console kuma:socialMedia:checkRoles
 This allows you to update your social feed and pull in the latest posts ready for moderation from the project Admin List. You could set up a cron to run this.
 
 ```bash
-app/console kuma:socialMedia:update
+bin/console kuma:socialMedia:update
 ```
 
 ### Outputting Feed Items on the front end
