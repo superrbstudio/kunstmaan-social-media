@@ -234,11 +234,11 @@ class SocialAdminListController extends AdminListController
                 // we have returned from instagram with an error
                 $logger = $this->get('logger');
                 $logger->error('Unable to update Instagram: ' . $e->getMessage());
-                
+
                 $settings->setSetting('active', 'kuma_social.settings.active_no_api');
                 $this->getDoctrine()->getManager()->persist($settings);
                 $this->getDoctrine()->getManager()->flush();
-                
+
                 $this->addFlash('error', $this->get('translator')->trans('kuma_social.forms.instagram.messages.access_token_error') . $e->getMessage());
                 return $this->redirect($this->generateUrl('superrbkunstmaansocialmediabundle_admin_social_authenticate_instagram'));
             }
@@ -633,14 +633,18 @@ class SocialAdminListController extends AdminListController
             throw $this->createAccessDeniedException();
         }
 
+        $approved = null;
+
         if($id) {
             $post = $this->getDoctrine()->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->find($id);
 
             if($post) {
                 if($post->getApproved()) {
                     $post->setApproved(false);
+                    $approved = false;
                 } else {
                     $post->setApproved(true);
+                    $approved = true;
                 }
 
                 $this->getDoctrine()->getManager()->persist($post);
@@ -648,6 +652,6 @@ class SocialAdminListController extends AdminListController
             }
         }
 
-        return new JsonResponse(array('success' => true));
+        return new JsonResponse(array('success' => true, 'approved' => $approved));
     }
 }

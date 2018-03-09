@@ -21,14 +21,25 @@
 {% endblock %}
 
 {% block extrajavascript %}
-    {{ parent() }}
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.social-media-approval').each(function() {
-                $(this).on('change', function() {
-                    $.ajax('{{ path('superrbkunstmaansocialmediabundle_admin_social_approve') }}/' + $(this).data('id'));
-                })
-            });
+    <script src="/bundles/superrbkunstmaansocialmedia/js/promise.polyfill.js"></script>
+    <script src="/bundles/superrbkunstmaansocialmedia/js/fetch.polyfill.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var checkBoxes = document.getElementsByClassName('social-media-approval'), l = checkBoxes.length, i, cur;
+
+            for (i = 0; i < l; i++) {
+                (function(cur){
+                    cur.addEventListener('change', function() {
+                        var url = "{{ path('superrbkunstmaansocialmediabundle_admin_social_approve') }}/" + cur.getAttribute('data-id');
+                        fetch(url, {'credentials': 'include'}).then(function(response){
+                            if(response.ok) {
+                                return response.json();
+                            }
+                        });
+                    }, false);
+                })(checkBoxes[i])
+            }
         });
     </script>
 {% endblock %}

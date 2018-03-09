@@ -42,27 +42,27 @@
 {% block extrajavascript %}
 
     <script>
-        $('document').ready(function() {
-            var kumaSocialActive = $('#{{ form.vars.name }}_type');
+        document.addEventListener('DOMContentLoaded', function () {
+            var kumaSocialActive = document.querySelector('#{{ form.vars.name }}_type');
 
             function kumaSocialInstagramForm() {
-                if(kumaSocialActive.find(":selected").val() == 'twitter'){
-                    $('#instagram-options').css('display', 'none');
-                    $('#twitter-options').css('display', 'block');
-                    $('#{{ form.vars.name }}_instagramCaption').attr('required', null);
-                    $('#{{ form.vars.name }}_twitterContent').attr('required', 'required');
+                if (kumaSocialActive.options[kumaSocialActive.selectedIndex].value == 'twitter') {
+                    document.querySelector('#instagram-options').style.display = 'none';
+                    document.querySelector('#twitter-options').style.display = 'block';
+                    document.querySelector('#{{ form.vars.name }}_instagramCaption').setAttribute('required', null);
+                    document.querySelector('#{{ form.vars.name }}_twitterContent').setAttribute('required', 'required');
                 } else {
-                    $('#instagram-options').css('display', 'block');
-                    $('#twitter-options').css('display', 'none');
-                    $('#{{ form.vars.name }}_instagramCaption').attr('required', 'required');
-                    $('#{{ form.vars.name }}_twitterContent').attr('required', null);;
+                    document.querySelector('#instagram-options').style.display = 'block';
+                    document.querySelector('#twitter-options').style.display = 'none';
+                    document.querySelector('#{{ form.vars.name }}_instagramCaption').setAttribute('required', 'required');
+                    document.querySelector('#{{ form.vars.name }}_twitterContent').setAttribute('required', null);
                 }
             }
 
             kumaSocialInstagramForm();
-            kumaSocialActive.on('change', function() {
+            kumaSocialActive.addEventListener('change', function () {
                 kumaSocialInstagramForm();
-            });
+            }, false);
         });
     </script>
 
