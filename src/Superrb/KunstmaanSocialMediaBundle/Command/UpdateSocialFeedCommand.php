@@ -315,6 +315,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     'query' => array(
                         'count' => 50,
                         'q' => '#' . $settings->getSetting('hashtag'),
+                        'tweet_mode' => 'extended',
                     )
                 ));
             } else {
@@ -325,6 +326,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     'query' => array(
                         'count' => 50,
                         'screen_name' => $settings->getTwitterUsername(),
+                        'tweet_mode' => 'extended',
                     )
                 ));
             }
@@ -345,6 +347,9 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
                     foreach ($posts as $post)
                     {
+                        if($post->id == '996016356897312768') {
+                            var_dump($post);
+                        }
                         $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'twitter'));
 
                         if(!$social)
