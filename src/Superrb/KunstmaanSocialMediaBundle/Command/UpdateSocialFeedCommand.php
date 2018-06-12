@@ -347,9 +347,6 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
                     foreach ($posts as $post)
                     {
-                        if($post->id == '996016356897312768') {
-                            var_dump($post);
-                        }
                         $social = $doctrine->getRepository('SuperrbKunstmaanSocialMediaBundle:Social')->findOneBy(array('socialId' => $post->id, 'type' => 'twitter'));
 
                         if(!$social)
