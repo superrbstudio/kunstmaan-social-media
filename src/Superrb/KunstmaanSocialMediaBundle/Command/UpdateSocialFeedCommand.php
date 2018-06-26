@@ -368,7 +368,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                         $social->setDatePosted($dateTime);
 
                         $social->setLink('https://twitter.com/' . $post->user->screen_name . '/status/' . $post->id);
-                        if(isset($post->text)) { $social->setTwitterContent(utf8_encode($post->text)); }
+                        if(isset($post->full_text)) { $social->setTwitterContent(utf8_encode($post->full_text)); }
 
                         if(isset($post->entities->media[0]) and $post->entities->media[0]->type == 'photo')
                         {
