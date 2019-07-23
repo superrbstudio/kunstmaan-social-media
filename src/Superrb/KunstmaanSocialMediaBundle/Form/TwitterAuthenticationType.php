@@ -34,7 +34,6 @@ class TwitterAuthenticationType extends AbstractType
         $builder->add('active', ChoiceType::class, array(
             'label' => 'kuma_social.forms.twitter.active',
             'choices' => Setting::$twitterSettings,
-            'choices_as_values' => true,
             'constraints' => array(
                 new Choice(array(
                     'choices' => Setting::$twitterSettings,

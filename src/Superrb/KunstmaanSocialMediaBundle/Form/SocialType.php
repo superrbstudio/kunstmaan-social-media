@@ -44,7 +44,6 @@ class SocialType extends AbstractType
         $builder->add('type', ChoiceType::class, array(
             'choices' => $this->socialMediaService->getAvailableTypes(),
             'label' => 'kuma_social.forms.social.type',
-            'choices_as_values' => true,
             'constraints' => array(
                 new NotBlank(array(
                     'message' => 'kuma_social.forms.social.type',

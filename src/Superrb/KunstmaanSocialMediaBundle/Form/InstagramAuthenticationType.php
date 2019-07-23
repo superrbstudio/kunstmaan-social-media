@@ -35,7 +35,6 @@ class InstagramAuthenticationType extends AbstractType
         $builder->add('active', ChoiceType::class, array(
             'label' => 'kuma_social.forms.instagram.active',
             'choices' => Setting::$instagramSettings,
-            'choices_as_values' => true,
             'constraints' => array(
                 new Choice(array(
                     'choices' => Setting::$instagramSettings,

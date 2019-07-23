@@ -22,7 +22,6 @@ class VimeoAuthenticationType extends AbstractType
 
         $builder->add('active', ChoiceType::class, array(
             'choices' => $activeChoices,
-            'choices_as_values' => true,
         ));
 
         $builder->add('consumer_key', TextType::class, array(
@@ -40,7 +39,6 @@ class VimeoAuthenticationType extends AbstractType
 
         $builder->add('user_or_hashtag', ChoiceType::class, array(
             'choices' => $choices,
-            'choices_as_values' => true,
         ));
 
         $builder->add('user_id', TextType::class, array(
