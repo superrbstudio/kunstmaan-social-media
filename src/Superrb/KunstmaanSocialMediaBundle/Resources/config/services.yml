@@ -4,6 +4,7 @@ services:
         arguments: ['@service_container', '@kunstmaan_admin.cache']
     sb_social_media:
         class: Superrb\KunstmaanSocialMediaBundle\Service\SocialMediaService
+        public: true
         arguments:
             - "@doctrine.orm.entity_manager"
             - "%sb_social_media.instagram%"
