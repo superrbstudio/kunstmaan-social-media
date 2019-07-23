@@ -1,7 +1,4 @@
 services:
-    kunstmaan_admin.versionchecker:
-        class: Superrb\KunstmaanSocialMediaBundle\VersionCheck\VersionChecker
-        arguments: ['@service_container', '@kunstmaan_admin.cache']
     sb_social_media:
         class: Superrb\KunstmaanSocialMediaBundle\Service\SocialMediaService
         public: true
