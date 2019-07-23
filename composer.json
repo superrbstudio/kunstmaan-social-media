@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "kunstmaan/bundles-cms": "~5.0",
+    "kunstmaan/cms-pack": "*",
     "guzzlehttp/guzzle" : "6.*"
   },
   "autoload": {
