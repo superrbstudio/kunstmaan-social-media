@@ -24,3 +24,16 @@ services:
         arguments:
             - '@sb_social_media'
             - '@security.authorization_checker'
+
+    sb_social_media.command.update:
+        class: Superrb\KunstmaanSocialMediaBundle\Command\UpdateSocialFeedCommand
+        arguments:
+            - "@doctrine.orm.entity_manager"
+            - "@logger"
+        tags:
+            - { name: console.command }
+
+    sb_social_media.command.checkroles:
+        class: Superrb\KunstmaanSocialMediaBundle\Command\CheckUserRolesCommand
+        tags:
+            - { name: console.command }

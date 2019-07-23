@@ -17,7 +17,7 @@ class CheckUserRolesCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('kuma:socialMedia:checkRoles')
+            ->setName('kuma:socialmedia:checkroles')
             ->setDescription('Checks whether the required Roles exist');
     }
 

@@ -2,6 +2,9 @@
 
 namespace Superrb\KunstmaanSocialMediaBundle\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,10 +19,35 @@ use GuzzleHttp\Client;
 
 class UpdateSocialFeedCommand extends ContainerAwareCommand
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * UpdateSocialFeedCommand constructor.
+     * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
+     */
+    public function __construct(EntityManagerInterface $entityManager, LoggerInterface $logger)
+    {
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
+        parent::__construct();
+    }
+
+    /**
+     *
+     */
     protected function configure()
     {
         $this
-            ->setName('kuma:socialMedia:update')
+            ->setName('kuma:socialmedia:update')
             ->setDescription('Updates the social media feed items');
     }
 
@@ -92,8 +120,8 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
      */
     protected function updateInstagram(InputInterface $input, OutputInterface $output, Setting $settings)
     {
-        $doctrine = $this->getContainer()->get('doctrine');
-        $logger = $this->getContainer()->get('logger');
+        $doctrine = $this->entityManager;
+        $logger = $this->logger;
         $output->writeln('Updating Instagram');
 
         try
@@ -146,14 +174,14 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                             $social->setInstagramVideoUrl($post->videos->standard_resolution->url);
                         }
 
-                        $doctrine->getManager()->persist($social);
+                        $doctrine->persist($social);
                     }
                 }
 
                 $output->writeln('Instagram Updated: ' . $added . ' Added, ' . $updated . ' Updated');
                 $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
-                $doctrine->getManager()->persist($settings);
-                $doctrine->getManager()->flush();
+                $doctrine->persist($settings);
+                $doctrine->flush();
             } else {
                 $logger->error('Unable to update Instagram: ' . $response->getStatusCode() . ' response code given');
                 $output->writeln('<error>Unable to update Instagram: ' . $response->getStatusCode() . ' response code given</error>');
@@ -168,7 +196,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
     protected function updateTumblr(InputInterface $input, OutputInterface $output, Setting $settings)
     {
-        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine = $this->entityManager;
         $output->writeln('Updating Tumblr');
         try
         {
@@ -274,15 +302,15 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                                     $social->setTumblrVideoThumbnailImageUrl($post->thumbnail_url);
                                 }
 
-                                $doctrine->getManager()->persist($social);
+                                $doctrine->persist($social);
                             }
                         }
                     }
 
                     $output->writeln('Tumblr Updated: ' . $added . ' Added, ' . $updated . ' Updated');
                     $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
-                    $doctrine->getManager()->persist($settings);
-                    $doctrine->getManager()->flush();
+                    $doctrine->persist($settings);
+                    $doctrine->flush();
                 }
                 else
                 {
@@ -298,8 +326,8 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
     protected function updateTwitter(InputInterface $input, OutputInterface $output, Setting $settings)
     {
-        $doctrine = $this->getContainer()->get('doctrine');
-        $logger = $this->getContainer()->get('logger');
+        $doctrine = $this->entityManager;
+        $logger = $this->logger;
         $output->writeln('Updating Twitter');
 
         try
@@ -375,14 +403,14 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                             $social->setTwitterImageUrl($post->entities->media[0]->media_url_https);
                         }
 
-                        $doctrine->getManager()->persist($social);
+                        $doctrine->persist($social);
                     }
                 }
 
                 $output->writeln('Twitter Updated: ' . $added . ' Added, ' . $updated . ' Updated');
                 $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
-                $doctrine->getManager()->persist($settings);
-                $doctrine->getManager()->flush();
+                $doctrine->persist($settings);
+                $doctrine->flush();
             }
             else
             {
@@ -398,7 +426,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
     }
     protected function updateVimeo(InputInterface $input, OutputInterface $output, Setting $settings)
     {
-        $doctrine = $this->getContainer()->get('doctrine');
+        $doctrine = $this->entityManager;
         $output->writeln('Updating Vimeo');
 
         try
@@ -468,7 +496,7 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
                     $social->setVimeoDescription($post->description);
                     $social->setVimeoThumbnailImageUrl($thumbnail->link);
 
-                    $doctrine->getManager()->persist($social);
+                    $doctrine->persist($social);
                 }
             }
             else
@@ -478,8 +506,8 @@ class UpdateSocialFeedCommand extends ContainerAwareCommand
 
             $output->writeln('Vimeo Updated: ' . $added . ' Added, ' . $updated . ' Updated');
             $settings->setSetting('last_updated', date('Y-m-d H:i:s'));
-            $doctrine->getManager()->persist($settings);
-            $doctrine->getManager()->flush();
+            $doctrine->persist($settings);
+            $doctrine->flush();
         }
         catch (\Exception $e)
         {
