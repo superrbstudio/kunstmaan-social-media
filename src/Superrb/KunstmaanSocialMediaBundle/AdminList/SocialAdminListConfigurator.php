@@ -32,12 +32,12 @@ class SocialAdminListConfigurator extends AbstractDoctrineORMAdminListConfigurat
     /**
      * @var string
      */
-    private $listTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:list.html.twig';
+    private $listTemplate = '@SuperrbKunstmaanSocialMedia/Default/list.html.twig';
 
     /**
      * @var string
      */
-    private $addTemplate = 'SuperrbKunstmaanSocialMediaBundle:Default:addCustomPost.html.twig';
+    private $addTemplate = '@SuperrbKunstmaanSocialMedia/Default/addCustomPost.html.twig';
 
     /**
      * @param EntityManager $em        The entity manager
