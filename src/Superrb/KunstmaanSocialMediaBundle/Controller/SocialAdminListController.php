@@ -102,7 +102,7 @@ class SocialAdminListController extends AdminListController
             }
         }
 
-        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:addCustomPost.html.twig', array(
+        return $this->render('@SuperrbKunstmaanSocialMedia/Default/addCustomPost.html.twig', array(
             'form' => $form->createView(),
             'adminlistconfigurator' => $this->getAdminListConfigurator(),
             'entityVersionLockCheck' => false
@@ -269,7 +269,7 @@ class SocialAdminListController extends AdminListController
             }
         }
 
-        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateInstagram.html.twig', array(
+        return $this->render('@SuperrbKunstmaanSocialMedia/Default/authenticateInstagram.html.twig', array(
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
@@ -340,7 +340,7 @@ class SocialAdminListController extends AdminListController
                 $this->getDoctrine()->getManager()->flush();
             }
         }
-        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateTumblr.html.twig', array(
+        return $this->render('@SuperrbKunstmaanSocialMedia/Default/authenticateTumblr.html.twig', array(
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
@@ -456,7 +456,7 @@ class SocialAdminListController extends AdminListController
             }
         }
 
-        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateTwitter.html.twig', array(
+        return $this->render('@SuperrbKunstmaanSocialMedia/Default/authenticateTwitter.html.twig', array(
             'form' => $form->createView(),
             'settings' => $settings,
             'isAuthenticated' => $settings->getIsAuthenticated(),
@@ -586,7 +586,7 @@ class SocialAdminListController extends AdminListController
         $this->getDoctrine()->getManager()->persist($settings);
         $this->getDoctrine()->getManager()->flush();
 
-        return $this->render('SuperrbKunstmaanSocialMediaBundle:Default:authenticateVimeo.html.twig', array(
+        return $this->render('@SuperrbKunstmaanSocialMedia/Default/authenticateVimeo.html.twig', array(
             'form' => $form->createView(),
             'redirectUrl' => $redirectUrl,
             'settings' => $settings,
